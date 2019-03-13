@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -pedantic -fPIC -Os -std=c++11 -fPIC -fPIC -O3 -DNDEBUG   CMakeFiles/gtm.dir/gtm.cpp.o  -o /home/ansucato/Song/kayak/moos-ivp/bin/gtm -rdynamic ../../../lib/libMOOS.a -lpthread -lm 

@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -pedantic -fPIC -Os -std=c++11 -fPIC -fPIC -O3 -DNDEBUG   CMakeFiles/suicide_test.dir/SuicideTest.cpp.o  -o /home/ansucato/Song/kayak/moos-ivp/bin/tests/lib/suicide_test -rdynamic ../../../lib/libMOOS.a -lpthread -lm 

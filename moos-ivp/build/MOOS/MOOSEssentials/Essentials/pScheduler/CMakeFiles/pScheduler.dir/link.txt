@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -pedantic -fPIC -Os -std=c++11 -fPIC -O3 -DNDEBUG   CMakeFiles/pScheduler.dir/MOOSScheduler.cpp.o CMakeFiles/pScheduler.dir/pSchedulerMain.cpp.o  -o /home/ansucato/Song/kayak/moos-ivp/bin/pScheduler -rdynamic /home/ansucato/Song/kayak/moos-ivp/build/MOOS/MOOSCore/lib/libMOOS.a -lpthread -lm 

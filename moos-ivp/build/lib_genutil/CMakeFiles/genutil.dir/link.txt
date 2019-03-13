@@ -1,0 +1,2 @@
+/usr/bin/ar qc /home/ansucato/Song/kayak/moos-ivp/lib/libgenutil.a  CMakeFiles/genutil.dir/stringutil.cpp.o CMakeFiles/genutil.dir/MOOSAppRunnerThread.cpp.o CMakeFiles/genutil.dir/fileutil.cpp.o
+/usr/bin/ranlib /home/ansucato/Song/kayak/moos-ivp/lib/libgenutil.a

@@ -1,0 +1,2 @@
+/usr/bin/ar qc /home/ansucato/Song/kayak/moos-ivp/lib/libencounters.a  CMakeFiles/encounters.dir/CPAEvent.cpp.o
+/usr/bin/ranlib /home/ansucato/Song/kayak/moos-ivp/lib/libencounters.a

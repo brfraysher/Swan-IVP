@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -pedantic -fPIC -g -Os -std=c++11   CMakeFiles/nsplug.dir/Expander.cpp.o CMakeFiles/nsplug.dir/Expander_Info.cpp.o CMakeFiles/nsplug.dir/main.cpp.o  -o /home/ansucato/Song/kayak/moos-ivp/bin/nsplug -rdynamic /home/ansucato/Song/kayak/moos-ivp/lib/libmbutil.a -lm 

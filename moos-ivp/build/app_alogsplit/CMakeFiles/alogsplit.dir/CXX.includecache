@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ansucato/Song/kayak/moos-ivp/ivp/src/app_alogsplit/main.cpp
+string
+-
+cstdlib
+-
+iostream
+-
+MBUtils.h
+/home/ansucato/Song/kayak/moos-ivp/ivp/src/app_alogsplit/MBUtils.h
+ReleaseInfo.h
+/home/ansucato/Song/kayak/moos-ivp/ivp/src/app_alogsplit/ReleaseInfo.h
+SplitHandler.h
+/home/ansucato/Song/kayak/moos-ivp/ivp/src/app_alogsplit/SplitHandler.h
+
+/home/ansucato/Song/kayak/moos-ivp/ivp/src/lib_logutils/SplitHandler.h
+vector
+-
+string
+-
+map
+-
+set
+-
+
+/home/ansucato/Song/kayak/moos-ivp/ivp/src/lib_mbutil/MBUtils.h
+vector
+-
+string
+-
+set
+-
+time.h
+-
+
+/home/ansucato/Song/kayak/moos-ivp/ivp/src/lib_mbutil/ReleaseInfo.h
+string
+-
+

@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -pedantic -fPIC -g -Os -std=c++11   CMakeFiles/alogcd.dir/main.cpp.o CMakeFiles/alogcd.dir/CollisionReporter.cpp.o  -o /home/ansucato/Song/kayak/moos-ivp/bin/alogcd -rdynamic /home/ansucato/Song/kayak/moos-ivp/lib/liblogutils.a /home/ansucato/Song/kayak/moos-ivp/lib/libmbutil.a -lm 
