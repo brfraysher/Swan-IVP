@@ -1,7 +1,0 @@
-jniproj.lo: \
- /home/ansucato/Song/kayak/moos-ivp/MOOS/proj-4.8.0/src/jniproj.c \
- /usr/include/stdc-predef.h proj_config.h
-
-/usr/include/stdc-predef.h:
-
-proj_config.h:

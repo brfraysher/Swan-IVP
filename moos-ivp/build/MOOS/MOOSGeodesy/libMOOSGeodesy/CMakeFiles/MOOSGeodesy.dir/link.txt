@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC -Wall -Wextra -Wno-unused-parameter -pedantic -fPIC -Os -std=c++11 -fPIC  -shared -Wl,-soname,libMOOSGeodesy.so -o ../lib/libMOOSGeodesy.so CMakeFiles/MOOSGeodesy.dir/MOOSGeodesy.cpp.o  -L/home/ansucato/Song/kayak/moos-ivp/build/MOOS/proj-4.8.0/lib -lproj -lm -Wl,-rpath,/home/ansucato/Song/kayak/moos-ivp/build/MOOS/proj-4.8.0/lib: 

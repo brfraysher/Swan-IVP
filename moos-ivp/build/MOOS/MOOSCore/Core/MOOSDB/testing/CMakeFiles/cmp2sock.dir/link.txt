@@ -1,1 +1,0 @@
-/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -pedantic -fPIC -Os -std=c++11 -fPIC -fPIC -O3 -DNDEBUG   CMakeFiles/cmp2sock.dir/cmp2sock.cpp.o  -o /home/ansucato/Song/kayak/moos-ivp/bin/tests/cmp2sock -rdynamic ../../../lib/libMOOS.a -lpthread -lm 

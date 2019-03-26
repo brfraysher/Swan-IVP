@@ -1,1 +1,0 @@
-/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -pedantic -fPIC -g -Os -std=c++11   CMakeFiles/alogclip.dir/main.cpp.o CMakeFiles/alogclip.dir/ALogClipHandler.cpp.o CMakeFiles/alogclip.dir/ALogClipper.cpp.o  -o /home/ansucato/Song/kayak/moos-ivp/bin/alogclip -rdynamic /home/ansucato/Song/kayak/moos-ivp/lib/libmbutil.a -lm 
