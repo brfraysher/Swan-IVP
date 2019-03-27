@@ -35,8 +35,8 @@ done
 #  Part 2: Invoke the call to make in the build directory
 #-------------------------------------------------------------------
 
-mkdir -p build
-cd build
+mkdir -p ../build
+cd ../build
 
 cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ../
 
