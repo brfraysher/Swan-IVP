@@ -14,12 +14,12 @@
 
 Odometry::Odometry()
 {
-  m_first_reading = false;
-  m_current_x = 0;
-  m_current_y = 0;
-  m_previous_x = 0;
-  m_previous_y = 0;
-  m_total_distance = 0;
+    m_first_reading = false;
+    m_current_x = 0;
+    m_current_y = 0;
+    m_previous_x = 0;
+    m_previous_y = 0;
+    m_total_distance = 0;
 }
 
 //---------------------------------------------------------
@@ -34,37 +34,48 @@ Odometry::~Odometry()
 
 bool Odometry::OnNewMail(MOOSMSG_LIST &NewMail)
 {
-  MOOSMSG_LIST::iterator p;
-   
-  for(p=NewMail.begin(); p!=NewMail.end(); p++) {
-    CMOOSMsg &msg = *p;
+    bool x_set = false;
+    bool y_set = false;
+    MOOSMSG_LIST::iterator p;
 
-    std::string key = msg.GetKey();
+    for (p = NewMail.begin(); p != NewMail.end(); p++)
+    {
+        CMOOSMsg &msg = *p;
 
-    if (key == "NAV_X")
-    {
-      m_previous_x = m_current_x;
-      m_current_x = msg.GetDouble();
-    }
-    else if (key == "NAV_Y")
-    {
-      m_previous_y = m_current_y;
-      m_current_y = msg.GetDouble();
-    }
+        std::string key = msg.GetKey();
+
+        if (key == "NAV_X")
+        {
+            if (!x_set)
+            {
+                m_previous_x = m_current_x;
+                x_set = true;
+            }
+            m_current_x = msg.GetDouble();
+        }
+        else if (key == "NAV_Y")
+        {
+            if (!y_set)
+            {
+                m_previous_y = m_current_y;
+                y_set = true;
+            }
+            m_current_y = msg.GetDouble();
+        }
 
 #if 0 // Keep these around just for template
-    string key   = msg.GetKey();
-    string comm  = msg.GetCommunity();
-    double dval  = msg.GetDouble();
-    string sval  = msg.GetString(); 
-    string msrc  = msg.GetSource();
-    double mtime = msg.GetTime();
-    bool   mdbl  = msg.IsDouble();
-    bool   mstr  = msg.IsString();
+        string key   = msg.GetKey();
+        string comm  = msg.GetCommunity();
+        double dval  = msg.GetDouble();
+        string sval  = msg.GetString();
+        string msrc  = msg.GetSource();
+        double mtime = msg.GetTime();
+        bool   mdbl  = msg.IsDouble();
+        bool   mstr  = msg.IsString();
 #endif
-   }
-	
-   return(true);
+    }
+
+    return (true);
 }
 
 //---------------------------------------------------------
@@ -72,13 +83,13 @@ bool Odometry::OnNewMail(MOOSMSG_LIST &NewMail)
 
 bool Odometry::OnConnectToServer()
 {
-   // register for variables here
-   // possibly look at the mission file?
-   // m_MissionReader.GetConfigurationParam("Name", <string>);
-   // m_Comms.Register("VARNAME", 0);
-	
-   RegisterVariables();
-   return(true);
+    // register for variables here
+    // possibly look at the mission file?
+    // m_MissionReader.GetConfigurationParam("Name", <string>);
+    // m_Comms.Register("VARNAME", 0);
+
+    RegisterVariables();
+    return (true);
 }
 
 //---------------------------------------------------------
@@ -87,23 +98,23 @@ bool Odometry::OnConnectToServer()
 
 bool Odometry::Iterate()
 {
-  if (m_first_reading)
-  {
-    m_first_reading = false;
-    return(true);
-  }
+    if (m_first_reading)
+    {
+        m_first_reading = false;
+        return (true);
+    }
 
-  double x_delta, y_delta, delta;
+    double x_delta, y_delta, delta;
 
-  x_delta = std::abs(m_current_x - m_previous_x);
-  y_delta = std::abs(m_current_y = m_previous_y);
-  delta = std::sqrt(std::pow(x_delta, 2) + std::pow(y_delta, 2));
+    x_delta = m_current_x - m_previous_x;
+    y_delta = m_current_y - m_previous_y;
+    delta = std::sqrt(std::pow(x_delta, 2) + std::pow(y_delta, 2));
 
-  m_total_distance += delta;
+    m_total_distance += delta;
 
-  Notify("ODOMETRY_DIST", m_total_distance);
+    Notify("ODOMETRY_DIST", m_total_distance);
 
-  return(true);
+    return (true);
 }
 
 //---------------------------------------------------------
@@ -112,26 +123,30 @@ bool Odometry::Iterate()
 
 bool Odometry::OnStartUp()
 {
-  std::list<std::string> sParams;
-  m_MissionReader.EnableVerbatimQuoting(false);
-  if(m_MissionReader.GetConfiguration(GetAppName(), sParams)) {
-    std::list<std::string>::iterator p;
-    for(p=sParams.begin(); p!=sParams.end(); p++) {
-      std::string original_line = *p;
-      std::string param = stripBlankEnds(toupper(biteString(*p, '=')));
-      std::string value = stripBlankEnds(*p);
-      
-      if(param == "FOO") {
-        //handled
-      }
-      else if(param == "BAR") {
-        //handled
-      }
+    std::list<std::string> sParams;
+    m_MissionReader.EnableVerbatimQuoting(false);
+    if (m_MissionReader.GetConfiguration(GetAppName(), sParams))
+    {
+        std::list<std::string>::iterator p;
+        for (p = sParams.begin(); p != sParams.end(); p++)
+        {
+            std::string original_line = *p;
+            std::string param = stripBlankEnds(toupper(biteString(*p, '=')));
+            std::string value = stripBlankEnds(*p);
+
+            if (param == "FOO")
+            {
+                //handled
+            }
+            else if (param == "BAR")
+            {
+                //handled
+            }
+        }
     }
-  }
-  
-  RegisterVariables();	
-  return(true);
+
+    RegisterVariables();
+    return (true);
 }
 
 //---------------------------------------------------------
@@ -139,7 +154,7 @@ bool Odometry::OnStartUp()
 
 void Odometry::RegisterVariables()
 {
-  Register("NAV_X", 0);
-  Register("NAV_Y", 0);
+    Register("NAV_X", 0);
+    Register("NAV_Y", 0);
 }
 

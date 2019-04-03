@@ -133,6 +133,7 @@ ProcessConfig = pMarineViewer
 
   scope = ODOMETRY_DIST
 
+
    // Appcast configuration
   appcast_height       = 75
   appcast_width        = 30
