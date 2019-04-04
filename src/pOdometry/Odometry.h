@@ -8,9 +8,9 @@
 #ifndef Odometry_HEADER
 #define Odometry_HEADER
 
-#include "MOOS/libMOOS/MOOSLib.h"
+#include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 
-class Odometry : public CMOOSApp
+class Odometry : public AppCastingMOOSApp
 {
  public:
    Odometry();
@@ -21,6 +21,7 @@ class Odometry : public CMOOSApp
    bool Iterate();
    bool OnConnectToServer();
    bool OnStartUp();
+   bool buildReport();
 
  protected:
    void RegisterVariables();
