@@ -19,7 +19,6 @@ Garmin19x::Garmin19x(const char* port)
 
 Garmin19x::~Garmin19x()
 {
-
 }
 
 int Garmin19x::open_port(const char* port)
@@ -55,7 +54,9 @@ int Garmin19x::open_port(const char* port)
         tcsetattr(fd, TCSANOW, &options);
 
         std::cout << "Port opened!" << std::endl;
-        fcntl(fd, F_SETFL, 0);
+        char read_buffer[100];
+        int bytes_read = 0;
+        bytes_read = read(fd,&read_buffer,100);
     }
 
     return (fd);

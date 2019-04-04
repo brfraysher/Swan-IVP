@@ -7,5 +7,4 @@
 int main()
 {
     Garmin19x gps("/dev/ttyS1");
-
 }
