@@ -57,6 +57,7 @@ int Garmin19x::open_port(const char* port)
         char read_buffer[100];
         int bytes_read = 0;
         bytes_read = read(fd,&read_buffer,100);
+        std::cout <<read_buffer << std::endl;
     }
 
     return (fd);
