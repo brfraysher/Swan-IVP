@@ -34,6 +34,8 @@ Odometry::~Odometry()
 
 bool Odometry::OnNewMail(MOOSMSG_LIST &NewMail)
 {
+    AppCastingMOOSApp::OnNewMail(NewMail);
+
     bool x_set = false;
     bool y_set = false;
     MOOSMSG_LIST::iterator p;
@@ -98,6 +100,8 @@ bool Odometry::OnConnectToServer()
 
 bool Odometry::Iterate()
 {
+    AppCastingMOOSApp::Iterate();
+
     if (m_first_reading)
     {
         m_first_reading = false;
@@ -114,6 +118,7 @@ bool Odometry::Iterate()
 
     Notify("ODOMETRY_DIST", m_total_distance);
 
+    AppCastingMOOSApp::PostReport();
     return (true);
 }
 
@@ -123,6 +128,8 @@ bool Odometry::Iterate()
 
 bool Odometry::OnStartUp()
 {
+    AppCastingMOOSApp::OnStartUp();
+
     std::list<std::string> sParams;
     m_MissionReader.EnableVerbatimQuoting(false);
     if (m_MissionReader.GetConfiguration(GetAppName(), sParams))
@@ -154,7 +161,16 @@ bool Odometry::OnStartUp()
 
 void Odometry::RegisterVariables()
 {
+    AppCastingMOOSApp::RegisterVariables();
+
     Register("NAV_X", 0);
     Register("NAV_Y", 0);
+}
+
+bool Odometry::buildReport()
+{
+    m_msgs << "Total distance traveled: " << m_total_distance << std::endl;
+
+    return(true);
 }
 
