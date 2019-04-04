@@ -52,6 +52,8 @@ int Garmin19x::open_port(const char* port)
         options.c_cflag &= ~CSIZE;
         options.c_cflag |= CS8;
 
+        tcsetattr(fd, TCSANOW, &options);
+
         std::cout << "Port opened!" << std::endl;
         fcntl(fd, F_SETFL, 0);
     }
