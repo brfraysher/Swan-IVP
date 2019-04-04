@@ -17,6 +17,8 @@ using namespace std;
 
 GPS::GPS()
 {
+  m_current_lat = 0;
+  m_current_long = 0;
 }
 
 //---------------------------------------------------------

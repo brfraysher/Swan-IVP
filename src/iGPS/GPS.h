@@ -12,25 +12,30 @@
 
 class GPS : public AppCastingMOOSApp
 {
- public:
-   GPS();
-   ~GPS();
+public:
+    GPS();
+    ~GPS();
 
- protected: // Standard MOOSApp functions to overload  
-   bool OnNewMail(MOOSMSG_LIST &NewMail);
-   bool Iterate();
-   bool OnConnectToServer();
-   bool OnStartUp();
+protected: // Standard MOOSApp functions to overload
+    bool OnNewMail(MOOSMSG_LIST &NewMail);
 
- protected: // Standard AppCastingMOOSApp function to overload 
-   bool buildReport();
+    bool Iterate();
 
- protected:
-   void registerVariables();
+    bool OnConnectToServer();
 
- private: // Configuration variables
+    bool OnStartUp();
 
- private: // State variables
+protected: // Standard AppCastingMOOSApp function to overload
+    bool buildReport();
+
+protected:
+    void registerVariables();
+
+private: // Configuration variables
+
+private: // State variables
+    double m_current_lat;
+    double m_current_long;
 };
 
 #endif 
