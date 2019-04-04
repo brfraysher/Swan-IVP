@@ -9,6 +9,7 @@
 #include <fcntl.h>   /* File control definitions */
 #include <errno.h>   /* Error number definitions */
 #include <termios.h> /* POSIX terminal control definitions */
+#include <iostream>
 
 Garmin19x::Garmin19x(const char* port)
 {
@@ -51,6 +52,7 @@ int Garmin19x::open_port(const char* port)
         options.c_cflag &= ~CSIZE;
         options.c_cflag |= CS8;
 
+        std::cout << "Port opened!" << std::endl;
         fcntl(fd, F_SETFL, 0);
     }
 
