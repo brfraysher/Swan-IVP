@@ -36,7 +36,23 @@ int Garmin19x::open_port(const char* port)
         perror("open_port: Unable to open port - ");
     }
     else
+    {
+        struct termios options;
+
+        tcgetattr(fd, &options);
+
+        cfsetispeed(&options, B38400);
+        cfsetospeed(&options, B38400);
+
+        options.c_cflag |= (CLOCAL | CREAD);
+
+        options.c_cflag &= ~PARENB;
+        options.c_cflag &= ~CSTOPB;
+        options.c_cflag &= ~CSIZE;
+        options.c_cflag |= CS8;
+
         fcntl(fd, F_SETFL, 0);
+    }
 
     return (fd);
 }
