@@ -1,0 +1,9 @@
+//------------------------------------------------
+// iGPS config block
+
+ProcessConfig = iGPS
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
