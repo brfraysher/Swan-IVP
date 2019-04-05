@@ -9,6 +9,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "GPS.h"
+#include "Garmin19x.h"
 
 using namespace std;
 
@@ -17,8 +18,9 @@ using namespace std;
 
 GPS::GPS()
 {
-  m_current_lat = 0;
-  m_current_long = 0;
+    Garmin19x gps1("/dev/ttyS1");
+    m_current_lat = 0;
+    m_current_long = 0;
 }
 
 //---------------------------------------------------------
@@ -33,31 +35,32 @@ GPS::~GPS()
 
 bool GPS::OnNewMail(MOOSMSG_LIST &NewMail)
 {
-  AppCastingMOOSApp::OnNewMail(NewMail);
+    AppCastingMOOSApp::OnNewMail(NewMail);
 
-  MOOSMSG_LIST::iterator p;
-  for(p=NewMail.begin(); p!=NewMail.end(); p++) {
-    CMOOSMsg &msg = *p;
-    string key    = msg.GetKey();
+    MOOSMSG_LIST::iterator p;
+    for (p = NewMail.begin(); p != NewMail.end(); p++)
+    {
+        CMOOSMsg &msg = *p;
+        string key = msg.GetKey();
 
 #if 0 // Keep these around just for template
-    string comm  = msg.GetCommunity();
-    double dval  = msg.GetDouble();
-    string sval  = msg.GetString(); 
-    string msrc  = msg.GetSource();
-    double mtime = msg.GetTime();
-    bool   mdbl  = msg.IsDouble();
-    bool   mstr  = msg.IsString();
+        string comm  = msg.GetCommunity();
+        double dval  = msg.GetDouble();
+        string sval  = msg.GetString();
+        string msrc  = msg.GetSource();
+        double mtime = msg.GetTime();
+        bool   mdbl  = msg.IsDouble();
+        bool   mstr  = msg.IsString();
 #endif
 
-     if(key == "FOO") 
-       cout << "great!";
+        if (key == "FOO")
+            cout << "great!";
 
-     else if(key != "APPCAST_REQ") // handled by AppCastingMOOSApp
-       reportRunWarning("Unhandled Mail: " + key);
-   }
-	
-   return(true);
+        else if (key != "APPCAST_REQ") // handled by AppCastingMOOSApp
+            reportRunWarning("Unhandled Mail: " + key);
+    }
+
+    return (true);
 }
 
 //---------------------------------------------------------
@@ -65,8 +68,8 @@ bool GPS::OnNewMail(MOOSMSG_LIST &NewMail)
 
 bool GPS::OnConnectToServer()
 {
-   registerVariables();
-   return(true);
+    registerVariables();
+    return (true);
 }
 
 //---------------------------------------------------------
@@ -75,10 +78,10 @@ bool GPS::OnConnectToServer()
 
 bool GPS::Iterate()
 {
-  AppCastingMOOSApp::Iterate();
-  // Do your thing here!
-  AppCastingMOOSApp::PostReport();
-  return(true);
+    AppCastingMOOSApp::Iterate();
+    // Do your thing here!
+    AppCastingMOOSApp::PostReport();
+    return (true);
 }
 
 //---------------------------------------------------------
@@ -87,35 +90,38 @@ bool GPS::Iterate()
 
 bool GPS::OnStartUp()
 {
-  AppCastingMOOSApp::OnStartUp();
+    AppCastingMOOSApp::OnStartUp();
 
-  STRING_LIST sParams;
-  m_MissionReader.EnableVerbatimQuoting(false);
-  if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
-    reportConfigWarning("No config block found for " + GetAppName());
+    STRING_LIST sParams;
+    m_MissionReader.EnableVerbatimQuoting(false);
+    if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
+        reportConfigWarning("No config block found for " + GetAppName());
 
-  STRING_LIST::iterator p;
-  for(p=sParams.begin(); p!=sParams.end(); p++) {
-    string orig  = *p;
-    string line  = *p;
-    string param = toupper(biteStringX(line, '='));
-    string value = line;
+    STRING_LIST::iterator p;
+    for (p = sParams.begin(); p != sParams.end(); p++)
+    {
+        string orig = *p;
+        string line = *p;
+        string param = toupper(biteStringX(line, '='));
+        string value = line;
 
-    bool handled = false;
-    if(param == "FOO") {
-      handled = true;
+        bool handled = false;
+        if (param == "FOO")
+        {
+            handled = true;
+        }
+        else if (param == "BAR")
+        {
+            handled = true;
+        }
+
+        if (!handled)
+            reportUnhandledConfigWarning(orig);
+
     }
-    else if(param == "BAR") {
-      handled = true;
-    }
 
-    if(!handled)
-      reportUnhandledConfigWarning(orig);
-
-  }
-  
-  registerVariables();	
-  return(true);
+    registerVariables();
+    return (true);
 }
 
 //---------------------------------------------------------
@@ -123,27 +129,27 @@ bool GPS::OnStartUp()
 
 void GPS::registerVariables()
 {
-  AppCastingMOOSApp::RegisterVariables();
-  // Register("FOOBAR", 0);
+    AppCastingMOOSApp::RegisterVariables();
+    // Register("FOOBAR", 0);
 }
 
 
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool GPS::buildReport() 
+bool GPS::buildReport()
 {
-  m_msgs << "============================================ \n";
-  m_msgs << "File:                                        \n";
-  m_msgs << "============================================ \n";
+    m_msgs << "============================================ \n";
+    m_msgs << "File:                                        \n";
+    m_msgs << "============================================ \n";
 
-  ACTable actab(4);
-  actab << "Alpha | Bravo | Charlie | Delta";
-  actab.addHeaderLines();
-  actab << "one" << "two" << "three" << "four";
-  m_msgs << actab.getFormattedString();
+    ACTable actab(4);
+    actab << "Alpha | Bravo | Charlie | Delta";
+    actab.addHeaderLines();
+    actab << "one" << "two" << "three" << "four";
+    m_msgs << actab.getFormattedString();
 
-  return(true);
+    return (true);
 }
 
 

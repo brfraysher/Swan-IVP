@@ -7,15 +7,18 @@
 
 
 #include <string>
+#include <iostream>
+#include <cstdio>
+#include <unistd.h>
+#include <serial/serial.h>
 
 class Garmin19x
 {
 public:
-    Garmin19x(const char* port);
+    Garmin19x(const std::string& port);
     ~Garmin19x();
 
 private:
-    int open_port(const char* port);
 };
 
 
