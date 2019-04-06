@@ -19,6 +19,7 @@ public:
     ~Garmin19x();
 
 private:
+    serial::Serial m_gps;
 };
 
 

@@ -18,7 +18,8 @@ using namespace std;
 
 GPS::GPS()
 {
-    Garmin19x gps1("/dev/ttyS1");
+    m_gps.setPort("/dev/ttyS1");
+    m_gps.setBaudrate(38400);
     m_current_lat = 0;
     m_current_long = 0;
 }
@@ -80,6 +81,11 @@ bool GPS::Iterate()
 {
     AppCastingMOOSApp::Iterate();
     // Do your thing here!
+
+    std::string buf;
+    m_gps.readline(buf);
+    std::cout << buf << std::endl;
+
     AppCastingMOOSApp::PostReport();
     return (true);
 }

@@ -9,6 +9,12 @@
 #define GPS_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
+#include "Garmin19x.h"
+#include <string>
+#include <iostream>
+#include <cstdio>
+#include <unistd.h>
+#include <serial/serial.h>
 
 class GPS : public AppCastingMOOSApp
 {
@@ -36,6 +42,7 @@ private: // Configuration variables
 private: // State variables
     double m_current_lat;
     double m_current_long;
+    serial::Serial m_gps;
 };
 
 #endif 

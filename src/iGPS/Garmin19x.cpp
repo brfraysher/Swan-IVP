@@ -8,11 +8,14 @@
 Garmin19x::Garmin19x(const std::string& port)
 {
     uint32_t baud = 38400;
-    serial::Serial gps1(port, baud);
+
+    m_gps.setPort(port);
+    m_gps.setBaudrate(baud);
 
 }
 
 Garmin19x::~Garmin19x()
 {
+
 }
 
