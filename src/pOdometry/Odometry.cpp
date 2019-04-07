@@ -13,13 +13,8 @@
 // Constructor
 
 Odometry::Odometry()
+        : m_first_reading(false), m_current_x(0), m_current_y(0), m_previous_x(0), m_previous_y(0), m_total_distance(0)
 {
-    m_first_reading = false;
-    m_current_x = 0;
-    m_current_y = 0;
-    m_previous_x = 0;
-    m_previous_y = 0;
-    m_total_distance = 0;
 }
 
 //---------------------------------------------------------
@@ -171,6 +166,6 @@ bool Odometry::buildReport()
 {
     m_msgs << "Total distance traveled: " << m_total_distance << std::endl;
 
-    return(true);
+    return (true);
 }
 
