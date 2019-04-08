@@ -10,7 +10,7 @@ echo "---Entering home directory---"
 cd ~/
 
 echo "---Updating Repository---"
-apt update -y
+sudo apt update -y
 
 echo "---Cloning moos-ivp tree---"
 svn co https://oceanai.mit.edu/svn/moos-ivp-aro/trunk/ ~/moos-ivp || { echo "---ERROR: Run sudo apt install subversion---" ; exit 1; }
