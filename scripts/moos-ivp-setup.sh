@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+
+###  Created by Andrew Sucat
+
+
 echo 'Entering head of repository'
 cd ..
 repoDir=$(pwd)
@@ -33,7 +37,7 @@ echo 'Building repository modules'
 source build.sh || { echo 'Error building repository modules' ; exit 1; }
 
 echo 'Adding moos-ivp binaries path to .bashrc file'
-echo "export PATH=$PATH:~/moos-ivp/bin:$repoDir/bin"
+echo "export PATH=$PATH:~/moos-ivp/bin:$repoDir/bin" >> ~/.bashrc
 
 echo "Sourcing bash"
 
