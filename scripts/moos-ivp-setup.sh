@@ -45,4 +45,4 @@ echo "export PATH=$PATH:~/moos-ivp/bin:$repoDir/bin" >> ~/.bashrc
 
 echo "---Success!!!---"
 echo "--- Run the below command to source your .bashrc file ---"
-echo "---   source .bashrc   ---"
+echo "---   source ~/.bashrc   ---"
