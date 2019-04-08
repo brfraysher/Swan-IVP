@@ -2,11 +2,6 @@
 
 ###  Created by Andrew Sucato
 
-if [[ "$EUID" -ne 0 ]]
-  then echo "Please run as root: sudo ./moos-ivp-setup.sh"
-  exit
-fi
-
 echo "---Entering head of repository---"
 cd ..
 repoDir=$(pwd)
@@ -15,15 +10,15 @@ echo "---Entering home directory---"
 cd ~/
 
 echo "---Updating Repository---"
-apt update
+sudo apt update -y
 
 echo "---Cloning moos-ivp tree---"
-svn co https://oceanai.mit.edu/svn/moos-ivp-aro/trunk/ ~/moos-ivp || { echo "---ERROR: Run sudo apt install subversion---" ; exit 1; }
+svn co https://oceanai.mit.edu/svn/moos-ivp-aro/trunk/ ~/moos-ivp || { echo "---Error cloning moos-ivp tree... Is subversion installed?---" ; exit 1; }
 
 echo "---Installing dependencies---"
-apt install -y g++  cmake  xterm || { echo "---Error in first apt install---" ; exit 1; }
-apt install -y libfltk1.3-dev  freeglut3-dev  libpng-dev  libjpeg-dev || { echo "---Error in second install---" ; exit 1; }
-apt install -y libxft-dev  libxinerama-dev   libtiff5-dev || { echo "---Error in third install---" ; exit 1; }
+sudo apt install -y g++  cmake  xterm || { echo "---Error in first apt install---" ; exit 1; }
+sudo apt install -y libfltk1.3-dev  freeglut3-dev  libpng-dev  libjpeg-dev || { echo "---Error in second install---" ; exit 1; }
+sudo apt install -y libxft-dev  libxinerama-dev   libtiff5-dev || { echo "---Error in third install---" ; exit 1; }
 
 echo "---Entering moos-ivp---"
 cd ~/moos-ivp/
