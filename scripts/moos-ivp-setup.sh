@@ -10,7 +10,7 @@ echo 'Updating Repository'
 apt update
 
 echo 'Cloning moos-ivp tree'
-svn co https://oceanai.mit.edu/svn/moos-ivp-aro/trunk/ ~/moos-ivp
+svn co https://oceanai.mit.edu/svn/moos-ivp-aro/trunk/ ~/moos-ivp || { echo 'ERROR: Run sudo apt install subversion' ; exit 1; }
 
 echo 'Installing dependencies'
 apt install -y g++  cmake  xterm || { echo 'Error in first apt install' ; exit 1; }
