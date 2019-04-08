@@ -13,7 +13,7 @@ echo "---Updating Repository---"
 sudo apt update -y
 
 echo "---Cloning moos-ivp tree---"
-svn co https://oceanai.mit.edu/svn/moos-ivp-aro/trunk/ ~/moos-ivp || { echo "---ERROR: Run sudo apt install subversion---" ; exit 1; }
+svn co https://oceanai.mit.edu/svn/moos-ivp-aro/trunk/ ~/moos-ivp || { echo "---Error cloning moos-ivp tree... Is subversion installed?---" ; exit 1; }
 
 echo "---Installing dependencies---"
 sudo apt install -y g++  cmake  xterm || { echo "---Error in first apt install---" ; exit 1; }
