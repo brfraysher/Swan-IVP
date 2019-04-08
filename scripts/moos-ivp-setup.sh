@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-
+echo 'Entering head of repository'
+cd ..
 repoDir=$(pwd)
 
 echo 'Entering home directory'
