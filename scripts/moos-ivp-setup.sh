@@ -25,16 +25,16 @@ echo '---Entering moos-ivp---'
 cd ~/moos-ivp/
 
 echo '---Building moos---'
-source build-moos.sh || { echo '---Error building moos---' ; exit 1; }
+./build-moos.sh || { echo '---Error building moos---' ; exit 1; }
 
 echo '---Building ivp modules---'
-source build-ivp.sh || { echo '---Error building Ivp modules---' ; exit 1; }
+./build-ivp.sh || { echo '---Error building Ivp modules---' ; exit 1; }
 
 echo '---Entering repository directory---'
 cd $repoDir
 
 echo '---Building repository modules---'
-source build.sh || { echo '---Error building repository modules---' ; exit 1; }
+./build.sh || { echo '---Error building repository modules---' ; exit 1; }
 
 echo '---Adding moos-ivp binaries path to .bashrc file---'
 echo "export PATH=$PATH:~/moos-ivp/bin:$repoDir/bin" >> ~/.bashrc
