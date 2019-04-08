@@ -40,7 +40,7 @@ echo 'Adding moos-ivp binaries path to .bashrc file'
 echo "export PATH=$PATH:~/moos-ivp/bin:$repoDir/bin" >> ~/.bashrc
 
 echo "Sourcing bash"
-
+source ~/.bashrc
 
 
 
