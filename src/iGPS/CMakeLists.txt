@@ -22,7 +22,6 @@ ADD_EXECUTABLE(iGPS ${SRC} ${NEMATOAD})
 
 target_include_directories(iGPS PRIVATE NemaToad)
 TARGET_LINK_LIBRARIES(iGPS
-   serial
    ${MOOS_LIBRARIES}
    apputil
    mbutil
