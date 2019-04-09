@@ -7,7 +7,7 @@
 #===========================================================================
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-PROJECT( IVP_EXTEND )
+PROJECT( KAYAK )
 
 #=============================================================================
 # Set the output directories for the binary and library files
