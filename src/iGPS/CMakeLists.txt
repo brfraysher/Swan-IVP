@@ -11,7 +11,6 @@ SET(SRC
 ADD_EXECUTABLE(iGPS ${SRC})
 
 TARGET_LINK_LIBRARIES(iGPS
-   serial
    ${MOOS_LIBRARIES}
    apputil
    mbutil
