@@ -9,7 +9,6 @@
 #define GPS_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
-#include "Garmin19x.h"
 #include <string>
 #include <iostream>
 #include <cstdio>

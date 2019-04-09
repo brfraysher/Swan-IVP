@@ -6,8 +6,7 @@
 SET(SRC
   GPS.cpp
   GPS_Info.cpp
-  main.cpp
-        Garmin19x.cpp Garmin19x.h)
+  main.cpp)
 
 ADD_EXECUTABLE(iGPS ${SRC})
 
