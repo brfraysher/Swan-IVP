@@ -41,7 +41,6 @@ private: // Configuration variables
 private: // State variables
     double m_current_lat;
     double m_current_long;
-    serial::Serial m_gps;
 };
 
 #endif 
