@@ -96,18 +96,21 @@ bool GPS::Iterate()
 
     }
 
-    if (!m_gps->fix.locked())
-    {
-        reportRunWarning("GPS1 lock lost");
-    }
-    else
-    {
-        retractRunWarning("GPS1 lock lost");
+//    if (!m_gps->fix.locked())
+//    {
+//        reportRunWarning("GPS1 lock lost");
+//    }
+//    else
+//    {
+//        retractRunWarning("GPS1 lock lost");
         Notify("GPS1_LAT", m_gps->fix.latitude);
         Notify("GPS1_LON", m_gps->fix.longitude);
-        m_msgs << "Lat: " << m_gps->fix.latitude << std::endl;
-        m_msgs << "Lon: " << m_gps->fix.longitude << std::endl;
-    }
+    Notify("GPS1_LAT", 12);
+    Notify("GPS1_LON", 13);
+
+//        m_msgs << "Lat: " << m_gps->fix.latitude << std::endl;
+//        m_msgs << "Lon: " << m_gps->fix.longitude << std::endl;
+//    }
 
 
     AppCastingMOOSApp::PostReport();
