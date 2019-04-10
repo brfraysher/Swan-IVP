@@ -9,6 +9,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "GPS.h"
+#include "nmeaparse/nmea.h"
 
 using namespace std;
 
@@ -16,6 +17,8 @@ using namespace std;
 // Constructor
 
 GPS::GPS()
+    : m_current_lat(0),
+      m_current_lon(0)
 {
 }
 
@@ -77,6 +80,12 @@ bool GPS::Iterate()
     AppCastingMOOSApp::Iterate();
     // Do your thing here!
 
+    if (m_comPort->isOpen())
+    {
+        std::string nmeaSentence;
+        m_comPort->readline(nmeaSentence);
+        std::cout << nmeaSentence << std::endl;
+    }
 
 
     AppCastingMOOSApp::PostReport();
@@ -118,6 +127,10 @@ bool GPS::OnStartUp()
             reportUnhandledConfigWarning(orig);
 
     }
+    std::string port = "/dev/ttyS1";
+    const uint32_t baud = 38400;
+
+    m_comPort = new serial::Serial(port, baud);
 
     registerVariables();
     return (true);
@@ -129,7 +142,7 @@ bool GPS::OnStartUp()
 void GPS::registerVariables()
 {
     AppCastingMOOSApp::RegisterVariables();
-    // Register("FOOBAR", 0);
+    // Register("LAT", 0);
 }
 
 

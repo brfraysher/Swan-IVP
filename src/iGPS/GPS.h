@@ -39,8 +39,9 @@ protected:
 private: // Configuration variables
 
 private: // State variables
+    serial::Serial* m_comPort;
     double m_current_lat;
-    double m_current_long;
+    double m_current_lon;
 };
 
 #endif 
