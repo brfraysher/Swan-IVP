@@ -16,6 +16,9 @@ If you have ideas for improvements, even if it's not something you think you can
    * `git checkout -b <branch-name>`
 1. This branch is local to your machine, so no one else can see it yet. To register it with the remote repository:
    * `git push -u origin <branch-name>`
+1. Create a template for your module
+    * `MyGenMOOSApp <module-name> <prefix> "<your-name>"`
+        * For example, to create a template for a module called iGPS, you would put `MyGenMOOSApp GPS i "Andrew Sucato"`
 1. Do your feature development in the branch, committing and pushing along the way.
 1. Open a merge request for the branch in GitLab.
    * Sometimes there will be a handy button on the front page to let you do this — other times, just go to the Branches page and click the Merge Request button for your branch.
