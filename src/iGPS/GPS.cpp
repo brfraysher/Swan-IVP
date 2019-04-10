@@ -85,6 +85,28 @@ bool GPS::Iterate()
         std::string nmeaSentence;
         m_comPort->readline(nmeaSentence);
         std::cout << nmeaSentence << std::endl;
+        try
+        {
+            m_parser->readLine(nmeaSentence);
+        }
+        catch (nmea::NMEAParseError& e)
+        {
+
+        }
+
+    }
+
+    if (!m_gps->fix.locked())
+    {
+        reportRunWarning("GPS1 lock lost");
+    }
+    else
+    {
+        retractRunWarning("GPS1 lock lost");
+        Notify("GPS1_LAT", m_gps->fix.latitude);
+        Notify("GPS1_LON", m_gps->fix.longitude);
+        m_msgs << "Lat: " << m_gps->fix.latitude << std::endl;
+        m_msgs << "Lon: " << m_gps->fix.longitude << std::endl;
     }
 
 
@@ -131,6 +153,8 @@ bool GPS::OnStartUp()
     const uint32_t baud = 38400;
 
     m_comPort = new serial::Serial(port, baud);
+    m_parser = new nmea::NMEAParser;
+    m_gps = new nmea::GPSService(*m_parser);
 
     registerVariables();
     return (true);
