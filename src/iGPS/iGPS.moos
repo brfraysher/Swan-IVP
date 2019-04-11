@@ -3,8 +3,8 @@
 
 ProcessConfig = iGPS
 {
-   AppTick   = 0
-   CommsTick = 0
+   AppTick   = 4
+   CommsTick = 4
 }
 
 
