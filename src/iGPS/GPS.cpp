@@ -17,8 +17,7 @@ using namespace std;
 // Constructor
 
 GPS::GPS()
-    : m_current_lat(0),
-      m_current_lon(0)
+        : m_current_lat(0), m_current_lon(0)
 {
 }
 
@@ -89,32 +88,33 @@ bool GPS::Iterate()
         {
             m_parser->readLine(nmeaSentence);
         }
-        catch (nmea::NMEAParseError& e)
+        catch (nmea::NMEAParseError &e)
         {
 
         }
 
     }
 
-//    if (!m_gps->fix.locked())
-//    {
-//       reportRunWarning("GPS1 lock lost");
-//   }
-//    else
-//    {
-//        retractRunWarning("GPS1 lock lost");
-        Notify("GPS1_LAT", m_gps->fix.latitude);
-        Notify("GPS1_LON", m_gps->fix.longitude);
-	Notify("GPS1_QUALITY", m_gps->fix.quality);
-	Notify("GPS1_STATUS", m_gps->fix.status);
-	Notify("GPS1_ALT", m_gps->fix.altitude);
-	Notify("GPS1_TRACKING_SATS", (double)m_gps->fix.trackingSatellites);
-	Notify("GPS1_VISIBLE_SATS", (double)m_gps->fix.visibleSatellites);
-	Notify("GPS1_HORIZONTAL_ACCURACY", m_gps->fix.horizontalAccuracy());
-	Notify("GPS1_VERTICAL_ACCURACY", m_gps->fix.verticalAccuracy());
-        m_msgs << "Lat: " << m_gps->fix.latitude << std::endl;
-        m_msgs << "Lon: " << m_gps->fix.longitude << std::endl;
-//    }
+    if (!m_gps->fix.locked())
+    {
+        reportRunWarning("GPS1 lock lost");
+    }
+
+    retractRunWarning("GPS1 lock lost");
+    Notify("GPS1_LOCKED", m_gps->fix.locked());
+    Notify("GPS1_LAT", m_gps->fix.latitude);
+    Notify("GPS1_LON", m_gps->fix.longitude);
+    Notify("GPS1_SPEED", m_gps->fix.speed);
+    Notify("GPS1_HEADING", m_gps->fix.travelAngle);
+    Notify("GPS1_QUALITY", m_gps->fix.quality);
+    Notify("GPS1_STATUS", m_gps->fix.status);
+    Notify("GPS1_ALT", m_gps->fix.altitude);
+    Notify("GPS1_TRACKING_SATS", (double) m_gps->fix.trackingSatellites);
+    Notify("GPS1_VISIBLE_SATS", (double) m_gps->fix.visibleSatellites);
+    Notify("GPS1_HORIZONTAL_ACCURACY", m_gps->fix.horizontalAccuracy());
+    Notify("GPS1_VERTICAL_ACCURACY", m_gps->fix.verticalAccuracy());
+    m_msgs << "Lat: " << m_gps->fix.latitude << std::endl;
+    m_msgs << "Lon: " << m_gps->fix.longitude << std::endl;
 
 
     AppCastingMOOSApp::PostReport();
@@ -183,13 +183,10 @@ void GPS::registerVariables()
 bool GPS::buildReport()
 {
     m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
+    m_msgs << "File:   Test                                 \n";
     m_msgs << "============================================ \n";
 
     ACTable actab(4);
-    actab << "Alpha | Bravo | Charlie | Delta";
-    actab.addHeaderLines();
-    actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
 
     return (true);
