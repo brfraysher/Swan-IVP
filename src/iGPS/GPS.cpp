@@ -83,7 +83,6 @@ bool GPS::Iterate()
     {
         std::string nmeaSentence;
         m_comPort->readline(nmeaSentence);
-        std::cout << nmeaSentence << std::endl;
         try
         {
             m_parser->readLine(nmeaSentence);
