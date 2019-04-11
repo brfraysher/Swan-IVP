@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <serial/serial.h>
+#include "nmeaparse/nmea.h"
 
 class GPS : public AppCastingMOOSApp
 {
@@ -39,8 +40,9 @@ protected:
 private: // Configuration variables
 
 private: // State variables
-    double m_current_lat;
-    double m_current_long;
+    serial::Serial* m_comPort;
+    nmea::NMEAParser* m_parser;
+    nmea::GPSService* m_gps;
 };
 
 #endif 

@@ -21,7 +21,7 @@ void showSynopsis()
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
   blk("  The iGPS application is used for               ");
-  blk("                                                                ");
+  blk("  interfacing with the Garmin19x GPS.                            ");
   blk("                                                                ");
   blk("                                                                ");
   blk("                                                                ");

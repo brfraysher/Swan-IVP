@@ -14,17 +14,18 @@ SET(NEMATOAD
 
 
 SET(SRC
-  GPS.cpp
-  GPS_Info.cpp
-  main.cpp)
+        GPS.cpp
+        GPS_Info.cpp
+        main.cpp)
 
 ADD_EXECUTABLE(iGPS ${SRC} ${NEMATOAD})
 
 target_include_directories(iGPS PRIVATE NemaToad)
 TARGET_LINK_LIBRARIES(iGPS
-   ${MOOS_LIBRARIES}
-   apputil
-   mbutil
-   m
-   pthread)
+        serial
+        ${MOOS_LIBRARIES}
+        apputil
+        mbutil
+        m
+        pthread)
 
