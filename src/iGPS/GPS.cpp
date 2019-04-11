@@ -17,7 +17,6 @@ using namespace std;
 // Constructor
 
 GPS::GPS()
-        : m_current_lat(0), m_current_lon(0)
 {
 }
 
