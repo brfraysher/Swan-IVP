@@ -20,7 +20,8 @@ public:
   }
 
 private:
-  bool OnNewMail (MOOSMSG_LIST & Mail) 
+
+  bool OnNewMail (MOOSMSG_LIST & Mail) override
   {
     MOOSMSG_LIST::iterator p;
     for (p = Mail.begin(); p != Mail.end(); p++)
@@ -53,11 +54,12 @@ private:
     return (true);
   }
   
-  bool OnConnectToServer () {
-    return(Register("X", 0.0));
+  bool OnConnectToServer () override
+  {
+    return Register("DESIRED_RUDDER") && Register("DESIRED_RUDDER");
   } 
   
-  bool Iterate()
+  bool Iterate() override
   {
     double left_command;
     double right_command;
