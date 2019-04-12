@@ -29,6 +29,9 @@ SET( RUNTIME_OUTPUT_DIRECTORY "${IVP_EXTEND_BIN_DIR}"  CACHE PATH "" )
 find_package(MOOS 10.0)
 INCLUDE_DIRECTORIES(${MOOS_INCLUDE_DIRS})
 
+#find_package(serial)
+find_library(seriallib libserial.a)
+
 #=============================================================================
 # Find the "moos-ivp" base directory
 #=============================================================================
