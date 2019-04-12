@@ -56,7 +56,7 @@ private:
   
   bool OnConnectToServer () override
   {
-    return Register("DESIRED_RUDDER") && Register("DESIRED_RUDDER");
+    return Register("DESIRED_RUDDER") && Register("DESIRED_THRUST");
   } 
   
   bool Iterate() override
