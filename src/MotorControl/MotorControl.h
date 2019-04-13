@@ -64,8 +64,8 @@ private:
     double left_command;
     double right_command;
 
-    left_command = _thrust - _rudder + 90;
-    right_command = _thrust + _rudder + 90;
+    left_command = _thrust + _rudder + 90;
+    right_command = _thrust - _rudder + 90;
 
     left_command = std::min(160.0, std::max(20.0, left_command));
     right_command = std::min(160.0, std::max(20.0, right_command));
@@ -76,7 +76,9 @@ private:
     std::vector<uint8_t> data = { 'K', left, right, '\n' };
     if (_port.isOpen())
     {
-      std::cout << "Writing\n";
+      std::cout << "Writing" << std::endl;
+      std::cout << "Left: " << (int)left << std::endl;
+      std::cout << "Right: " << (int)right << std::endl;
       _port.write(data);
     }
     else

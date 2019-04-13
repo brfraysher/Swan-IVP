@@ -1,3 +1,10 @@
 build/
 bin/
 lib/
+*.alog
+*.blog
+*.xlog
+*.ylog
+*._moos
+*._bhv
+*.LastOpenedMOOSLogDirectory
