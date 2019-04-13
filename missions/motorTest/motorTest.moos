@@ -4,7 +4,7 @@ ServerHost = localhost
 ServerPort = 9000
 Simulator  = false 
 
-Community  = alder
+Community  = motorTest
 
 MOOSTimeWarp = 1
 
@@ -17,20 +17,20 @@ ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
 
-  Run = MOOSDB		@ NewConsole = false
-  Run = pLogger		@ NewConsole = false
-  Run = uSimMarine	@ NewConsole = false
-  Run = pNodeReporter	@ NewConsole = false
-  Run = pMarinePID	@ NewConsole = false
-//  Run = pMarineViewer	@ NewConsole = false
-  Run = uProcessWatch   @ NewConsole = false
-  Run = pHelmIvP	@ NewConsole = false
-//  Run = pOdometry	@ NewConsole = false
-  Run = MotorControl	@ NewConsole = false
+  Run = MOOSDB			@ NewConsole = false
+  Run = pLogger			@ NewConsole = false
+  Run = uSimMarine		@ NewConsole = false
+  Run = pNodeReporter		@ NewConsole = false
+  Run = pMarinePID		@ NewConsole = false
+//  Run = pMarineViewer		@ NewConsole = false
+  Run = uProcessWatch   	@ NewConsole = false
+  Run = pHelmIvP		@ NewConsole = false
+//  Run = pOdometry		@ NewConsole = false
+  run = iMotorController	@ NewConsole = false
 }
 
 
-ProcessConfig = MotorControl
+ProcessConfig = iMotorControl
 {
   AppTick	= 10
   CommsTick	= 10

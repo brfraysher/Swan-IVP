@@ -1,0 +1,9 @@
+//------------------------------------------------
+// iMotorController config block
+
+ProcessConfig = iMotorController
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
