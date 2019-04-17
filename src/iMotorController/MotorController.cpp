@@ -91,6 +91,9 @@ bool MotorController::Iterate()
     left_command = std::min(160.0, std::max(20.0, left_command));
     right_command = std::min(160.0, std::max(20.0, right_command));
 
+    m_rightMotorSpeed = right_command;
+    m_leftMotorSpeed = left_command;
+
     uint8_t left = static_cast<uint8_t>(left_command);
     uint8_t right = static_cast<uint8_t>(right_command);
 
