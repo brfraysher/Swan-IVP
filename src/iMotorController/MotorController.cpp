@@ -140,7 +140,7 @@ bool MotorController::OnStartUp()
             m_address = value;
             handled = true;
         }
-        else if (param == "BAR")
+        else if (param == "BAUD")
         {
             m_baud = std::stoi(value);
             handled = true;
