@@ -26,7 +26,7 @@ ProcessConfig = ANTLER
   Run = uProcessWatch   	@ NewConsole = false
   Run = pHelmIvP		@ NewConsole = false
 //  Run = pOdometry		@ NewConsole = false
-  run = iMotorController	@ NewConsole = false
+  Run = iMotorController	@ NewConsole = false
 }
 
 
@@ -35,7 +35,7 @@ ProcessConfig = iMotorController
   AppTick	= 10
   CommsTick	= 10
 
-  Address   = usb-Arduino__www.arduino.cc__0042_5573631303835111D1B1-if00
+  Address   = /dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_5573631303835111D1B1-if00
   Baud      = 115200
 }
 
