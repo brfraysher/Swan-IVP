@@ -201,7 +201,12 @@ bool MotorController::initializeSerial()
         m_port.setBaudrate(m_baud);
         m_port.open();
     }
-    catch (const std::exception& e)
+    catch (const serial::IOException& e)
+    {
+        reportRunWarning(e.what());
+        return false;
+    }
+    catch (const serial::SerialException& e)
     {
         reportRunWarning(e.what());
         return false;
