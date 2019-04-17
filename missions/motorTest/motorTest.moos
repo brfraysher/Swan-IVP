@@ -30,7 +30,7 @@ ProcessConfig = ANTLER
 }
 
 
-ProcessConfig = iMotorControl
+ProcessConfig = iMotorController
 {
   AppTick	= 10
   CommsTick	= 10
@@ -55,7 +55,7 @@ ProcessConfig = pLogger
   WildCardOmitPattern = DB_VARSUMMARY
   WildCardOmitPattern = DB_RWSUMMARY
   WildCardExclusionLog = true
-
+}
 // uSimMarine config block
 
 ProcessConfig = uSimMarine
