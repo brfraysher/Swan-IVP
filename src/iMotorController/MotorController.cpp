@@ -15,7 +15,9 @@
 // Constructor
 
 MotorController::MotorController()
-:   m_rudder(0),
+:   m_address("UNINITIALIZED"),
+    m_baud(0),
+    m_rudder(0),
     m_thrust(0),
     m_leftMotorSpeed(90),
     m_rightMotorSpeed(90)
@@ -150,6 +152,11 @@ bool MotorController::OnStartUp()
             reportUnhandledConfigWarning(orig);
 
     }
+
+    if (m_address == "UNINITIALIZED")
+        reportConfigWarning("Serial port address not given");
+    if (m_baud == 0)
+        reportConfigWarning("Serial port baud rate not given");
 
     initializeSerial();
 
