@@ -1,5 +1,5 @@
 /************************************************************/
-/*    NAME: Spencer Davis                                              */
+/*    NAME: Andrew Sucato                                   */
 /*    ORGN: The University of Alabama                       */
 /*    FILE: MotorController.cpp                                        */
 /*    DATE: 04/12/19                                          */
@@ -21,7 +21,6 @@ MotorController::MotorController()
     m_thrust(0),
     m_leftMotorSpeed(90),
     m_rightMotorSpeed(90)
-
 {
 }
 

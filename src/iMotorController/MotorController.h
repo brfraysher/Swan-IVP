@@ -1,5 +1,5 @@
 /************************************************************/
-/*    NAME: Spencer Davis                                              */
+/*    NAME: Andrew Sucato                                             */
 /*    ORGN: The University of Alabama                       */
 /*    FILE: MotorController.h                                          */
 /*    DATE: 04/12/19                                          */

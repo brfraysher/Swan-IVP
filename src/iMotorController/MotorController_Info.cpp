@@ -1,5 +1,5 @@
 /****************************************************************/
-/*   NAME: Spencer Davis                                             */
+/*   NAME: Andrew Sucato                                             */
 /*   ORGN: The University of Alabama                            */
 /*   FILE: MotorController_Info.cpp                                        */
 /*   DATE: 04/12/19                                               */
@@ -74,6 +74,8 @@ void showExampleConfigAndExit()
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
   blk("                                                                ");
+  blk("  Address = /path/to/serial/port");
+  blk("  Baud = 9800");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
