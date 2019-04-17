@@ -13,26 +13,29 @@
 
 class MotorController : public AppCastingMOOSApp
 {
- public:
-   MotorController(const std::string& port);
-   ~MotorController();
+public:
+    MotorController();
+    ~MotorController();
 
- protected: // Standard MOOSApp functions to overload
-   bool OnNewMail(MOOSMSG_LIST &NewMail);
-   bool Iterate();
-   bool OnConnectToServer();
-   bool OnStartUp();
+protected: // Standard MOOSApp functions to overload
+    bool OnNewMail(MOOSMSG_LIST &NewMail);
+    bool Iterate();
+    bool OnConnectToServer();
+    bool OnStartUp();
 
- protected: // Standard AppCastingMOOSApp function to overload
-   bool buildReport();
+protected: // Standard AppCastingMOOSApp function to overload
+    bool buildReport();
 
- protected:
-   void registerVariables();
+protected:
+    void registerVariables();
+    void initializeSerial();
 
- private: // Configuration variables
+private: // Configuration variables
 
- private: // State variables
+private: // State variables
     serial::Serial m_port;
+    std::string m_address;
+    unsigned int m_baud;
 
     double m_rudder;
     double m_thrust;

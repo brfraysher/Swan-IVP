@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
   std::cout << "iMotorController launching as " << run_command << std::endl;
   std::cout << termColor() << std::endl;
 
-  MotorController MotorController("/dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_5573631303835111D1B1-if00");
+  MotorController MotorController;
 
   MotorController.Run(run_command.c_str(), mission_file.c_str());
 

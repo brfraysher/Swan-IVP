@@ -34,6 +34,9 @@ ProcessConfig = iMotorController
 {
   AppTick	= 10
   CommsTick	= 10
+
+  Address   = usb-Arduino__www.arduino.cc__0042_5573631303835111D1B1-if00
+  Baud      = 115200
 }
 
 

@@ -14,9 +14,8 @@
 //---------------------------------------------------------
 // Constructor
 
-MotorController::MotorController(const std::string &port)
-:   m_port(port, 115200),
-    m_rudder(0),
+MotorController::MotorController()
+:   m_rudder(0),
     m_thrust(0),
     m_leftMotorSpeed(90),
     m_rightMotorSpeed(90)
@@ -136,12 +135,14 @@ bool MotorController::OnStartUp()
         std::string value = line;
 
         bool handled = false;
-        if (param == "FOO")
+        if (param == "ADDRESS")
         {
+            m_address = value;
             handled = true;
         }
         else if (param == "BAR")
         {
+            m_baud = std::stoi(value);
             handled = true;
         }
 
@@ -149,6 +150,8 @@ bool MotorController::OnStartUp()
             reportUnhandledConfigWarning(orig);
 
     }
+
+    initializeSerial();
 
     registerVariables();
     return (true);
@@ -183,6 +186,12 @@ bool MotorController::buildReport()
     return (true);
 }
 
+void MotorController::initializeSerial()
+{
+    m_port.setPort(m_address);
+    m_port.setBaudrate(m_baud);
+    m_port.open();
+}
 
 
 
