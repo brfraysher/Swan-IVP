@@ -193,11 +193,20 @@ bool MotorController::buildReport()
     return (true);
 }
 
-void MotorController::initializeSerial()
+bool MotorController::initializeSerial()
 {
-    m_port.setPort(m_address);
-    m_port.setBaudrate(m_baud);
-    m_port.open();
+    try
+    {
+        m_port.setPort(m_address);
+        m_port.setBaudrate(m_baud);
+        m_port.open();
+    }
+    catch (const std::exception& e)
+    {
+        reportRunWarning(e.what());
+        return false;
+    }
+    return true;
 }
 
 

@@ -28,7 +28,7 @@ protected: // Standard AppCastingMOOSApp function to overload
 
 protected:
     void registerVariables();
-    void initializeSerial();
+    bool initializeSerial();
 
 private: // Configuration variables
 
