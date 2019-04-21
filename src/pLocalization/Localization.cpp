@@ -80,6 +80,12 @@ bool Localization::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
+
+  if (!m_geo_ok)
+    reportRunWarning("GPS coordinate to local conversions not available");
+  else
+    retractRunWarning("GPS coordinate to local conversions not available");
+  
   double north;
   double east;
 
