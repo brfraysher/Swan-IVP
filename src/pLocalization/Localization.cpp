@@ -10,7 +10,6 @@
 #include "ACTable.h"
 #include "Localization.h"
 
-using namespace std;
 
 //---------------------------------------------------------
 // Constructor
@@ -36,20 +35,26 @@ bool Localization::OnNewMail(MOOSMSG_LIST &NewMail)
   MOOSMSG_LIST::iterator p;
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
-    string key    = msg.GetKey();
+    std::string key    = msg.GetKey();
 
 #if 0 // Keep these around just for template
-    string comm  = msg.GetCommunity();
+    std::string comm  = msg.GetCommunity();
     double dval  = msg.GetDouble();
-    string sval  = msg.GetString();
-    string msrc  = msg.GetSource();
+    std::string sval  = msg.GetString();
+    std::string msrc  = msg.GetSource();
     double mtime = msg.GetTime();
     bool   mdbl  = msg.IsDouble();
     bool   mstr  = msg.IsString();
 #endif
 
-     if(key == "FOO")
-       cout << "great!";
+     if(key == "GPS1_LAT")
+       m_lat = msg.GetDouble();
+     else if (key == "GPS1_LONG")
+       m_long = msg.GetDouble();
+     else if (key == "GPS1_HEADING")
+       m_heading = msg.GetDouble();
+     else if (key == "GPS1_SPEED")
+       m_speed = msg.GetDouble();
 
      else if(key != "APPCAST_REQ") // handled by AppCastingMOOSApp
        reportRunWarning("Unhandled Mail: " + key);
@@ -74,7 +79,17 @@ bool Localization::OnConnectToServer()
 bool Localization::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-  // Do your thing here!
+
+  double north;
+  double east;
+
+  m_geodesy.LatLong2LocalUTM(m_lat, m_long, north, east);
+  Notify("NAV_Y", north);
+  Notify("NAV_X", east);
+
+  Notify("NAV_HEADING", m_heading);
+  Notify("NAV_SPEED", m_speed);
+
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -94,10 +109,10 @@ bool Localization::OnStartUp()
 
   STRING_LIST::iterator p;
   for(p=sParams.begin(); p!=sParams.end(); p++) {
-    string orig  = *p;
-    string line  = *p;
-    string param = toupper(biteStringX(line, '='));
-    string value = line;
+    std::string orig  = *p;
+    std::string line  = *p;
+    std::string param = toupper(biteStringX(line, '='));
+    std::string value = line;
 
     bool handled = false;
     if(param == "FOO") {
@@ -112,6 +127,30 @@ bool Localization::OnStartUp()
 
   }
 
+  // look for latitude, longitude global variables
+  double latOrigin, longOrigin;
+  if(!m_MissionReader.GetValue("LatOrigin", latOrigin))
+  {
+    MOOSTrace("pLocalization: LatOrigin not set in *.moos file.\n");
+    m_geo_ok = false;
+  }
+  else if(!m_MissionReader.GetValue("LongOrigin", longOrigin))
+  {
+    MOOSTrace("pLocalization: LongOrigin not set in *.moos file\n");
+    m_geo_ok = false;
+  }
+  else
+  {
+    m_geo_ok = true;
+    // initialize m_geodesy
+    if(!m_geodesy.Initialise(latOrigin, longOrigin))
+    {
+        MOOSTrace("pLocalization: Geodesy init failed.\n");
+        m_geo_ok = false;
+    }
+  }
+
+
   registerVariables();
   return(true);
 }
@@ -122,7 +161,10 @@ bool Localization::OnStartUp()
 void Localization::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  // Register("FOOBAR", 0);
+  Register("GPS1_LAT", 0);
+  Register("GPS1_LONG", 0);
+  Register("GPS1_HEADING", 0);
+  Register("GPS1_SPEED", 0);
 }
 
 

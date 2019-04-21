@@ -9,6 +9,7 @@
 #define Localization_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
+#include "MOOS/libMOOSGeodesy/MOOSGeodesy.h"
 
 class Localization : public AppCastingMOOSApp
 {
@@ -31,6 +32,14 @@ class Localization : public AppCastingMOOSApp
  private: // Configuration variables
 
  private: // State variables
+   double m_lat;
+   double m_long;
+   double m_heading;
+   double m_speed;
+
+   bool m_geo_ok;
+
+   CMOOSGeodesy m_geodesy;
 };
 
 #endif
