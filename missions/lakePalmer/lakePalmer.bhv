@@ -1,8 +1,8 @@
 //--------    FILE: alder.bhv   -------------
 
-initialize   DEPLOY = true
+initialize   DEPLOY = false
 initialize   RETURN = false
-initialize   MOOS_MANUAL_OVERIDE = false
+//initialize   MOOS_MANUAL_OVERIDE = false
 
 //----------------------------------------------
 Behavior = BHV_Waypoint
@@ -14,8 +14,8 @@ Behavior = BHV_Waypoint
   endflag   = RETURN = true
 
   speed      = 2.0   // meters per second
-  radius     = 8.0
-  points     = 0,-50 : 50,-50 : 50,-100
+  radius     = 4.0
+  points     = 20,-10 : 40,0
 }
 
 //----------------------------------------------
@@ -24,10 +24,11 @@ Behavior = BHV_Waypoint
   name       = waypt_return
   pwt        = 100
   condition  = (RETURN = true)
-  condition  = (DEPLOY = true)
+//  condition  = (DEPLOY = true)
 
   speed      = 2.0
-  radius     = 8.0
+  radius     = 4.0
   point      = 0,0
 }
+
 

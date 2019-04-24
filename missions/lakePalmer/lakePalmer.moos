@@ -8,8 +8,8 @@ Community  = lakePalmer
 
 MOOSTimeWarp = 1
 
-LatOrigin  = 33.2180008
-LongOrigin = -87.548054
+LatOrigin  = 33.218004
+LongOrigin = -87.547964
 
 //------------------------------------------
 // Antler configuration  block
@@ -52,6 +52,11 @@ ProcessConfig = iMotorController
   Baud      = 115200
 }
 
+ProcessConfig = pOdometry
+{
+  AppTick   = 10
+  CommsTick = 10
+}
 
 ProcessConfig = pLogger
 {
@@ -123,7 +128,7 @@ ProcessConfig = pHelmIvP
   IVP_BEHAVIOR_DIR = ../../lib
 
   ok_skew = any
-  start_in_drive = true
+  start_in_drive = false
 }
 
 //------------------------------------------
@@ -166,7 +171,7 @@ ProcessConfig = pMarineViewer
   AppTick    = 4
   CommsTick  = 4
 
-  TIFF_FILE            = forrest19.tif
+  TIFF_FILE            = lakePalmer.tiff
   set_pan_x            = -90
   set_pan_y            = -280
   zoom                 = 0.65
