@@ -174,11 +174,11 @@ ProcessConfig = pMarineViewer
   TIFF_FILE            = lakePalmer.tif
   set_pan_x            = -90
   set_pan_y            = -280
-  zoom                 = 1
+  zoom                 = .5
   vehicle_shape_scale  = 1.5
   hash_delta           = 50
   hash_shade           = 0.4
-  hash_viewable        = false
+  hash_viewable        = true
 
   scope = ODOMETRY_DIST
 
