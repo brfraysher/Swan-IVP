@@ -39,6 +39,9 @@ class Localization : public AppCastingMOOSApp
 
    bool m_geo_ok;
 
+   double m_lastX;
+   double m_lastY;
+
    CMOOSGeodesy m_geodesy;
 };
 
