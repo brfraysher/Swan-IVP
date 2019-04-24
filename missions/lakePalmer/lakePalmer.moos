@@ -20,6 +20,7 @@ ProcessConfig = ANTLER
   Run = MOOSDB			@ NewConsole = false
   Run = pLogger			@ NewConsole = false
   Run = iGPS            @ NewConsole = false
+  Run = pLocalization   @ NewConsole = false
 //  Run = uSimMarine		@ NewConsole = false
   Run = pNodeReporter		@ NewConsole = false
   Run = pMarinePID		@ NewConsole = false
@@ -28,7 +29,7 @@ ProcessConfig = ANTLER
   Run = pHelmIvP		@ NewConsole = false
   Run = pOdometry		@ NewConsole = false
   Run = iMotorController	@ NewConsole = false
-  Run = pLocalization   @ NewConsole = false
+
 }
 
 ProcessConfig = pLocalization
