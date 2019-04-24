@@ -1,6 +1,6 @@
 // Level 2 Configuration file: M. Benjamin
 
-ServerHost = 192.168.1.124
+ServerHost = 192.168.1.142
 ServerPort = 9000
 Simulator  = false 
 
