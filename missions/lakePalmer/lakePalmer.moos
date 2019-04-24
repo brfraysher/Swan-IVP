@@ -195,6 +195,7 @@ ProcessConfig = pMarineViewer
   BUTTON_ONE = DEPLOY # DEPLOY=true
   BUTTON_ONE = MOOS_MANUAL_OVERIDE=false # RETURN=false
   BUTTON_TWO = RETURN # RETURN=true
+  BUTTON_TWO = MOOS_MANUAL_OVERIDE=false # RETURN=true
 }
 
 //------------------------------------------

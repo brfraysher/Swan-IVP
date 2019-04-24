@@ -15,7 +15,7 @@ Behavior = BHV_Waypoint
 
   speed      = 2.0   // meters per second
   radius     = 4.0
-  points     = 20,-10 : 40,0
+  points     = 20,-10 : 40,0 : 60,-10
 }
 
 //----------------------------------------------

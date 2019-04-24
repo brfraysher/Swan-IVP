@@ -2,7 +2,7 @@
 
 ServerHost = 192.168.1.142
 ServerPort = 9000
-Simulator  = false 
+Simulator  = true
 
 Community  = viewer
 
@@ -171,14 +171,14 @@ ProcessConfig = pMarineViewer
   AppTick    = 4
   CommsTick  = 4
 
-  tiff_file            = lakePalmer.tiff
+  TIFF_FILE            = lakePalmer.tif
   set_pan_x            = -90
   set_pan_y            = -280
-  zoom                 = 0.65
+  zoom                 = 1
   vehicle_shape_scale  = 1.5
   hash_delta           = 50
   hash_shade           = 0.4
-  hash_viewable        = true
+  hash_viewable        = false
 
   scope = ODOMETRY_DIST
 
@@ -194,6 +194,7 @@ ProcessConfig = pMarineViewer
   BUTTON_ONE = DEPLOY # DEPLOY=true
   BUTTON_ONE = MOOS_MANUAL_OVERIDE=false # RETURN=false
   BUTTON_TWO = RETURN # RETURN=true
+  BUTTON_TWO = MOOS_MANUAL_OVERIDE=false # RETURN=true
 }
 
 //------------------------------------------
