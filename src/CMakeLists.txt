@@ -18,9 +18,9 @@ ADD_SUBDIRECTORY(lib_behaviors-test)
 ADD_SUBDIRECTORY(pXRelayTest)
 ADD_SUBDIRECTORY(pExampleApp)
 ADD_SUBDIRECTORY(iGPS)
-#ADD_SUBDIRECTORY(MotorControl)
 ADD_SUBDIRECTORY(iMotorController)
 ADD_SUBDIRECTORY(pLocalization)
+ADD_SUBDIRECTORY(pOdometry)
 
 ##############################################################################
 #                           END of CMakeLists.txt
