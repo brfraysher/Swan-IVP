@@ -111,8 +111,6 @@ bool GPS::Iterate()
     Notify("GPS1_VISIBLE_SATS", (double) m_gps->fix.visibleSatellites);
     Notify("GPS1_HORIZONTAL_ACCURACY", m_gps->fix.horizontalAccuracy());
     Notify("GPS1_VERTICAL_ACCURACY", m_gps->fix.verticalAccuracy());
-    m_msgs << "Lat: " << m_gps->fix.latitude << std::endl;
-    m_msgs << "Lon: " << m_gps->fix.longitude << std::endl;
 
 
     AppCastingMOOSApp::PostReport();
@@ -180,11 +178,14 @@ void GPS::registerVariables()
 
 bool GPS::buildReport()
 {
-    m_msgs << "============================================ \n";
-    m_msgs << "File:   Test                                 \n";
-    m_msgs << "============================================ \n";
-
-    ACTable actab(4);
+    ACTable actab(2);
+    actab << "Param | Val";
+    actab.addHeaderLines();
+    actab << "GPS1_LAT" << m_gps->fix.latitude;
+    actab << "GPS1_LONG" << m_gps->fix.longitude;
+    actab << "" << "";
+    actab << "GPS1_HEADING" << m_gps->fix.travelAngle;
+    actab << "GPS1_SPEED" << m_gps->fix.speed;
     m_msgs << actab.getFormattedString();
 
     return (true);
