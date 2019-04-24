@@ -13,7 +13,7 @@
 // Constructor
 
 Odometry::Odometry()
-        : m_first_reading(false), m_current_x(0), m_current_y(0), m_previous_x(0), m_previous_y(0), m_total_distance(0)
+        : m_first_reading(true), m_current_x(0), m_current_y(0), m_previous_x(0), m_previous_y(0), m_total_distance(0)
 {
 }
 
@@ -99,8 +99,6 @@ bool Odometry::Iterate()
 
     if (m_first_reading)
     {
-        m_previous_x = m_current_x;
-        m_previous_y = m_current_y;
         m_first_reading = false;
         return (true);
     }
