@@ -39,6 +39,8 @@ private: // State variables
 
     double m_rudder;
     double m_thrust;
+    double m_maxPwmVal;
+    double m_minPwmVal;
     double m_leftMotorSpeed;
     double m_rightMotorSpeed;
 };

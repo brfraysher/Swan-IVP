@@ -19,6 +19,8 @@ MotorController::MotorController()
     m_baud(0),
     m_rudder(0),
     m_thrust(0),
+    m_maxPwmVal(160),
+    m_minPwmVal(90),
     m_leftMotorSpeed(90),
     m_rightMotorSpeed(90)
 {
@@ -85,17 +87,14 @@ bool MotorController::Iterate()
     double left_command;
     double right_command;
 
-    left_command = m_thrust + m_rudder + 90;
-    right_command = m_thrust - m_rudder + 90;
+    left_command = m_thrust + (0.5 * m_rudder);
+    right_command = m_thrust - (0.5 * m_rudder);
 
-    left_command = std::min(160.0, std::max(20.0, left_command));
-    right_command = std::min(160.0, std::max(20.0, right_command));
+    m_leftMotorSpeed = (left_command * (m_maxPwmVal - m_minPwmVal)) / 200 + 90;
+    m_rightMotorSpeed = (right_command * (m_maxPwmVal - m_minPwmVal)) / 200 + 90;
 
-    m_rightMotorSpeed = right_command;
-    m_leftMotorSpeed = left_command;
-
-    uint8_t left = static_cast<uint8_t>(left_command);
-    uint8_t right = static_cast<uint8_t>(right_command);
+    uint8_t left = static_cast<uint8_t>(m_leftMotorSpeed);
+    uint8_t right = static_cast<uint8_t>(m_rightMotorSpeed);
 
     std::vector<uint8_t> data = {'K', left, right, '\n'};
     const std::string arduinoPortWarning = "Arduino Port not open!!!";
