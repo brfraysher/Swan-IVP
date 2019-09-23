@@ -6,6 +6,7 @@
 /************************************************************/
 
 #include <iterator>
+#include <cmath>
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "MotorController.h"
@@ -54,10 +55,13 @@ bool MotorController::OnNewMail(MOOSMSG_LIST &NewMail)
         bool   mstr  = msg.IsString();
 #endif
 
-        if (key == "DESIRED_RUDDER")
+        if (key == "DESIRED_RUDDER"){
             m_rudder = msg.GetDouble();
+	    m_rudder = std::min(90.0, std::max(-90.0, m_rudder));
+	}
         else if (key == "DESIRED_THRUST")
             m_thrust = msg.GetDouble();
+	    if(m_thrust > 50) m_thrust = 50.0;
         else if (key != "APPCAST_REQ") // handled by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
@@ -84,9 +88,10 @@ bool MotorController::Iterate()
 
     double left_command;
     double right_command;
-
-    left_command = m_thrust + m_rudder + 90;
-    right_command = m_thrust - m_rudder + 90;
+    const double pi = std::acos(-1);
+	
+    left_command = 1.8*m_thrust + 90*std::sin(pi/180*m_rudder) + 90;
+    right_command = 1.8*m_thrust - 90*std::sin(pi/180*m_rudder) + 90;
 
     left_command = std::min(160.0, std::max(20.0, left_command));
     right_command = std::min(160.0, std::max(20.0, right_command));
