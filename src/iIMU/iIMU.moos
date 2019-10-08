@@ -1,0 +1,9 @@
+//------------------------------------------------
+// iIMU config block
+
+ProcessConfig = iIMU
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+

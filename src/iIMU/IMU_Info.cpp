@@ -1,13 +1,13 @@
 /****************************************************************/
 /*   NAME: Andrew Sucato                                             */
-/*   ORGN: MIT Cambridge MA                                     */
-/*   FILE: GPS_Info.cpp                               */
-/*   DATE: Dec 29th 1963                                        */
+/*   ORGN: The University of Alabama                            */
+/*   FILE: IMU_Info.cpp                                        */
+/*   DATE: 10/03/19                                               */
 /****************************************************************/
 
 #include <cstdlib>
 #include <iostream>
-#include "GPS_Info.h"
+#include "IMU_Info.h"
 #include "ColorParse.h"
 #include "ReleaseInfo.h"
 
@@ -20,8 +20,8 @@ void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
-  blk("  The iGPS application is used for               ");
-  blk("  interfacing with the Garmin19x GPS.                            ");
+  blk("  The iIMU application is used for               ");
+  blk("                                                                ");
   blk("                                                                ");
   blk("                                                                ");
   blk("                                                                ");
@@ -34,15 +34,15 @@ void showHelpAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("Usage: iGPS file.moos [OPTIONS]                   ");
+  blu("Usage: iIMU file.moos [OPTIONS]                   ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
   blk("                                                                ");
   blk("Options:                                                        ");
-  mag("  --alias", "=<ProcessName>                                      ");
-  blk("      Launch iGPS with the given process name         ");
-  blk("      rather than iGPS.                           ");
+  mag("  --alias","=<ProcessName>                                      ");
+  blk("      Launch iIMU with the given process name         ");
+  blk("      rather than iIMU.                           ");
   mag("  --example, -e                                                 ");
   blk("      Display example MOOS configuration block.                 ");
   mag("  --help, -h                                                    ");
@@ -50,7 +50,7 @@ void showHelpAndExit()
   mag("  --interface, -i                                               ");
   blk("      Display MOOS publications and subscriptions.              ");
   mag("  --version,-v                                                  ");
-  blk("      Display the release version of iGPS.        ");
+  blk("      Display the release version of iIMU.        ");
   blk("                                                                ");
   blk("Note: If argv[2] does not otherwise match a known option,       ");
   blk("      then it will be interpreted as a run alias. This is       ");
@@ -66,10 +66,10 @@ void showExampleConfigAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("iGPS Example MOOS Configuration                   ");
+  blu("iIMU Example MOOS Configuration                   ");
   blu("=============================================================== ");
   blk("                                                                ");
-  blk("ProcessConfig = iGPS                              ");
+  blk("ProcessConfig = iIMU                              ");
   blk("{                                                               ");
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
@@ -87,7 +87,7 @@ void showInterfaceAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("iGPS INTERFACE                                    ");
+  blu("iIMU INTERFACE                                    ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
@@ -109,7 +109,7 @@ void showInterfaceAndExit()
 
 void showReleaseInfoAndExit()
 {
-  showReleaseInfo("iGPS", "gpl");
+  showReleaseInfo("iIMU", "gpl");
   exit(0);
 }
 

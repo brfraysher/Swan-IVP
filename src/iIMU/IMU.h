@@ -1,35 +1,33 @@
 /************************************************************/
 /*    NAME: Andrew Sucato                                              */
-/*    ORGN: MIT                                             */
-/*    FILE: GPS.h                                          */
-/*    DATE: December 29th, 1963                             */
+/*    ORGN: The University of Alabama                       */
+/*    FILE: IMU.h                                          */
+/*    DATE: 10/03/19                                          */
 /************************************************************/
 
-#ifndef GPS_HEADER
-#define GPS_HEADER
+#ifndef IMU_HEADER
+#define IMU_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
-#include <string>
-#include <iostream>
-#include <cstdio>
-#include <unistd.h>
-#include <serial/serial.h>
-#include "nmeaparse/nmea.h"
 
-class GPS : public AppCastingMOOSApp
+extern "C" {
+#include "bno055.h"
+}
+
+class IMU : public AppCastingMOOSApp
 {
 public:
-  GPS();
-
-  ~GPS();
+  IMU();
+  
+  ~IMU();
 
 protected: // Standard MOOSApp functions to overload
   bool OnNewMail(MOOSMSG_LIST &NewMail);
-
+  
   bool Iterate();
-
+  
   bool OnConnectToServer();
-
+  
   bool OnStartUp();
 
 protected: // Standard AppCastingMOOSApp function to overload
@@ -39,11 +37,11 @@ protected:
   void registerVariables();
 
 private: // Configuration variables
-
+  bno055_t m_bno055;
+  bno055_euler_double_t m_euler;
+  bno055_quaternion_t m_quaternion;
+  unsigned char m_sysCalStatus;
 private: // State variables
-  serial::Serial *m_comPort;
-  nmea::NMEAParser *m_parser;
-  nmea::GPSService *m_gps;
 };
 
-#endif 
+#endif

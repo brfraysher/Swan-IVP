@@ -1,36 +1,61 @@
 /************************************************************/
 /*    NAME: Andrew Sucato                                              */
-/*    ORGN: MIT                                             */
-/*    FILE: GPS.cpp                                        */
-/*    DATE:                                                 */
+/*    ORGN: The University of Alabama                       */
+/*    FILE: IMU.cpp                                        */
+/*    DATE: 10/03/19                                          */
 /************************************************************/
 
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "GPS.h"
-#include "nmeaparse/nmea.h"
+#include "IMU.h"
 
-using namespace std;
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
+
+extern "C" {
+#include "bno055.h"
+}
+
 
 //---------------------------------------------------------
 // Constructor
 
-GPS::GPS()
+IMU::IMU()
 {
+  m_bno055.dev_addr = BNO055_I2C_ADDR1;
+  m_bno055.bus_read = bus_read;
+  m_bno055.bus_write = bus_write;
+  m_bno055.delay_msec = delay_func;
+  
+  if ((m_bno055.fid = open("/dev/i2c-1", O_RDWR)) < 0)
+  {
+    reportRunWarning("Failed to open I2C Bus!!!");
+  }
+  
+  if (ioctl(m_bno055.fid, I2C_SLAVE, m_bno055.dev_addr))
+  {
+    reportRunWarning("Failed to reach IMU on I2C Bus!!!");
+  }
+  
+  bno055_init(&m_bno055);
+  
+  bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF);
 }
 
 //---------------------------------------------------------
 // Destructor
 
-GPS::~GPS()
+IMU::~IMU()
 {
 }
 
 //---------------------------------------------------------
 // Procedure: OnNewMail
 
-bool GPS::OnNewMail(MOOSMSG_LIST &NewMail)
+bool IMU::OnNewMail(MOOSMSG_LIST &NewMail)
 {
   AppCastingMOOSApp::OnNewMail(NewMail);
   
@@ -40,7 +65,7 @@ bool GPS::OnNewMail(MOOSMSG_LIST &NewMail)
        p++)
   {
     CMOOSMsg &msg = *p;
-    string key = msg.GetKey();
+    std::string key = msg.GetKey();
 
 #if 0 // Keep these around just for template
     string comm  = msg.GetCommunity();
@@ -54,7 +79,7 @@ bool GPS::OnNewMail(MOOSMSG_LIST &NewMail)
     
     if (key == "FOO")
     {
-      cout << "great!";
+      std::cout << "great!";
     }
     
     else if (key != "APPCAST_REQ")
@@ -69,7 +94,7 @@ bool GPS::OnNewMail(MOOSMSG_LIST &NewMail)
 //---------------------------------------------------------
 // Procedure: OnConnectToServer
 
-bool GPS::OnConnectToServer()
+bool IMU::OnConnectToServer()
 {
   registerVariables();
   return (true);
@@ -79,47 +104,35 @@ bool GPS::OnConnectToServer()
 // Procedure: Iterate()
 //            happens AppTick times per second
 
-bool GPS::Iterate()
+bool IMU::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-  // Do your thing here!
   
-  if (m_comPort->isOpen())
+  if (bno055_convert_double_euler_hpr_deg(&m_euler))
   {
-    std::string nmeaSentence;
-    m_comPort->readline(nmeaSentence);
-    try
-    {
-      m_parser->readLine(nmeaSentence);
-    }
-    catch (nmea::NMEAParseError &e)
-    {
-    
-    }
-    
+    reportRunWarning("Failed to get euler data");
+  }
+  else
+  {
+    retractRunWarning("Failed to get euler data");
+    Notify("Heading", m_euler.h);
   }
   
-  if (!m_gps->fix.locked())
+  if (bno055_get_sys_calib_stat(&m_sysCalStatus))
   {
-    reportRunWarning("GPS1 lock lost");
+    reportRunWarning("Failed to get system calibration data");
   }
-  
-  retractRunWarning("GPS1 lock lost");
-  Notify("GPS1_LOCKED", m_gps->fix.locked());
-  Notify("GPS1_LAT", m_gps->fix.latitude);
-  Notify("GPS1_LON", m_gps->fix.longitude);
-  Notify("GPS1_SPEED", m_gps->fix.speed);
-  Notify("GPS1_HEADING", m_gps->fix.travelAngle);
-  Notify("GPS1_QUALITY", m_gps->fix.quality);
-  Notify("GPS1_STATUS", m_gps->fix.status);
-  Notify("GPS1_ALT", m_gps->fix.altitude);
-  Notify("GPS1_TRACKING_SATS", (double) m_gps->fix.trackingSatellites);
-  Notify("GPS1_VISIBLE_SATS", (double) m_gps->fix.visibleSatellites);
-  Notify("GPS1_HORIZONTAL_ACCURACY", m_gps->fix.horizontalAccuracy());
-  Notify("GPS1_VERTICAL_ACCURACY", m_gps->fix.verticalAccuracy());
-  m_msgs << "Lat: " << m_gps->fix.latitude << std::endl;
-  m_msgs << "Lon: " << m_gps->fix.longitude << std::endl;
-  
+  else if (m_sysCalStatus == 0)
+  {
+    reportRunWarning("IMU not calibrated - lost absolute orientation");
+    Notify("IMU_CALIB_STATUS", m_sysCalStatus);
+  }
+  else
+  {
+    retractRunWarning("Failed to get system calibration data");
+    retractRunWarning("IMU not calibrated - lost absolute orientation");
+    Notify("IMU_CALIB_STATUS", m_sysCalStatus);
+  }
   
   AppCastingMOOSApp::PostReport();
   return (true);
@@ -129,7 +142,7 @@ bool GPS::Iterate()
 // Procedure: OnStartUp()
 //            happens before connection is open
 
-bool GPS::OnStartUp()
+bool IMU::OnStartUp()
 {
   AppCastingMOOSApp::OnStartUp();
   
@@ -145,10 +158,10 @@ bool GPS::OnStartUp()
        p != sParams.end();
        p++)
   {
-    string orig = *p;
-    string line = *p;
-    string param = toupper(biteStringX(line, '='));
-    string value = line;
+    std::string orig = *p;
+    std::string line = *p;
+    std::string param = toupper(biteStringX(line, '='));
+    std::string value = line;
     
     bool handled = false;
     if (param == "FOO")
@@ -166,12 +179,6 @@ bool GPS::OnStartUp()
     }
     
   }
-  std::string port = "/dev/ttyS1";
-  const uint32_t baud = 38400;
-  
-  m_comPort = new serial::Serial(port, baud);
-  m_parser = new nmea::NMEAParser;
-  m_gps = new nmea::GPSService(*m_parser);
   
   registerVariables();
   return (true);
@@ -180,28 +187,30 @@ bool GPS::OnStartUp()
 //---------------------------------------------------------
 // Procedure: registerVariables
 
-void GPS::registerVariables()
+void IMU::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  // Register("LAT", 0);
+  // Register("FOOBAR", 0);
 }
 
 
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool GPS::buildReport()
+bool IMU::buildReport()
 {
   m_msgs << "============================================ \n";
-  m_msgs << "File:   Test                                 \n";
+  m_msgs << "File:                                        \n";
   m_msgs << "============================================ \n";
   
-  ACTable actab(4);
+  ACTable actab(2);
+  actab << "Param | Value";
+  actab.addHeaderLines();
+  actab << "I2C ADDR" << m_bno055.dev_addr;
+  actab << "Chip ID" << m_bno055.chip_id;
+  actab << "Calib Status" << m_sysCalStatus;
+  actab << "Heading" << m_euler.h;
   m_msgs << actab.getFormattedString();
   
   return (true);
 }
-
-
-
-

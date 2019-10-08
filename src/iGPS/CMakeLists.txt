@@ -4,13 +4,12 @@
 #--------------------------------------------------------
 
 SET(NEMATOAD
-  NemaToad/src/GPSFix.cpp
-  NemaToad/src/GPSService.cpp
-  NemaToad/src/NMEACommand.cpp
-  NemaToad/src/NMEAParser.cpp
-  NemaToad/src/NumberConversion.cpp
-)
-
+        NemaToad/src/GPSFix.cpp
+        NemaToad/src/GPSService.cpp
+        NemaToad/src/NMEACommand.cpp
+        NemaToad/src/NMEAParser.cpp
+        NemaToad/src/NumberConversion.cpp
+        )
 
 
 SET(SRC
