@@ -40,7 +40,7 @@ void showHelpAndExit()
   showSynopsis();
   blk("                                                                ");
   blk("Options:                                                        ");
-  mag("  --alias","=<ProcessName>                                      ");
+  mag("  --alias", "=<ProcessName>                                      ");
   blk("      Launch iIMU with the given process name         ");
   blk("      rather than iIMU.                           ");
   mag("  --example, -e                                                 ");

@@ -40,9 +40,15 @@ IMU::IMU()
     reportRunWarning("Failed to reach IMU on I2C Bus!!!");
   }
   
-  bno055_init(&m_bno055);
+  if (bno055_init(&m_bno055))
+  {
+    reportRunWarning("Failed to initialize IMU!");
+  }
   
-  bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF);
+  if (bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF))
+  {
+    reportRunWarning("Failed to set IMU operation mode!");
+  }
 }
 
 //---------------------------------------------------------
