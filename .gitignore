@@ -9,3 +9,4 @@ lib/
 *._bhv
 *.LastOpenedMOOSLogDirectory
 *.moos++
+cmake-build-*
