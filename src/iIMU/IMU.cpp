@@ -24,31 +24,22 @@ extern "C" {
 // Constructor
 
 IMU::IMU()
+        : m_open(false),
+        m_sysCalStatus(0),
+        m_status(1),
+        m_lastErrorCode(0),
+        m_i2cAddr("/dev/i2c-1"),
+        m_euler({0}),
+        m_quaternion({0})
+        
 {
   m_bno055.dev_addr = BNO055_I2C_ADDR1;
   m_bno055.bus_read = bus_read;
   m_bno055.bus_write = bus_write;
   m_bno055.delay_msec = delay_func;
   
-  if ((m_bno055.fid = open("/dev/i2c-1", O_RDWR)) < 0)
-  {
-    reportRunWarning("Failed to open I2C Bus!!!");
-  }
+  initIMU();
   
-  if (ioctl(m_bno055.fid, I2C_SLAVE, m_bno055.dev_addr))
-  {
-    reportRunWarning("Failed to reach IMU on I2C Bus!!!");
-  }
-  
-  if (bno055_init(&m_bno055))
-  {
-    reportRunWarning("Failed to initialize IMU!");
-  }
-  
-  if (bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF))
-  {
-    reportRunWarning("Failed to set IMU operation mode!");
-  }
 }
 
 //---------------------------------------------------------
@@ -56,6 +47,43 @@ IMU::IMU()
 
 IMU::~IMU()
 {
+}
+
+
+void IMU::initIMU()
+{
+  if ((m_bno055.fid = open(m_i2cAddr.c_str(), O_RDWR)) < 0)
+  {
+    reportRunWarning("Failed to open I2C Bus!!!");
+    return;
+  }
+  
+  if (ioctl(m_bno055.fid, I2C_SLAVE, m_bno055.dev_addr))
+  {
+    reportEvent("Failed to reach IMU on I2C Bus!!!");
+    return;
+  }
+  
+  
+  if (bno055_init(&m_bno055) || m_bno055.chip_id != 0xA0)
+  {
+    reportEvent("Failed to initialize IMU!");
+    return;
+  }
+  
+  if (bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF))
+  {
+    reportEvent("Failed to set IMU operation mode!");
+    return;
+  }
+  
+  if (!checkPOST())
+  {
+    reportEvent("Failed POST!");
+    return;
+  }
+  
+  m_open = true;
 }
 
 //---------------------------------------------------------
@@ -114,31 +142,12 @@ bool IMU::Iterate()
 {
   AppCastingMOOSApp::Iterate();
   
-  if (bno055_convert_double_euler_hpr_deg(&m_euler))
-  {
-    reportRunWarning("Failed to get euler data");
-  }
-  else
-  {
-    retractRunWarning("Failed to get euler data");
-    Notify("Heading", m_euler.h);
-  }
+  checkConnected();
+  //checkStatus();
   
-  if (bno055_get_sys_calib_stat(&m_sysCalStatus))
-  {
-    reportRunWarning("Failed to get system calibration data");
-  }
-  else if (m_sysCalStatus == 0)
-  {
-    reportRunWarning("IMU not calibrated - lost absolute orientation");
-    Notify("IMU_CALIB_STATUS", m_sysCalStatus);
-  }
-  else
-  {
-    retractRunWarning("Failed to get system calibration data");
-    retractRunWarning("IMU not calibrated - lost absolute orientation");
-    Notify("IMU_CALIB_STATUS", m_sysCalStatus);
-  }
+  readCalibration();
+  readEuler();
+  readQuaternion();
   
   AppCastingMOOSApp::PostReport();
   return (true);
@@ -206,7 +215,7 @@ void IMU::registerVariables()
 bool IMU::buildReport()
 {
   m_msgs << "============================================ \n";
-  m_msgs << "File:                                        \n";
+  m_msgs << "File:   iIMU                                 \n";
   m_msgs << "============================================ \n";
   
   ACTable actab(2);
@@ -219,4 +228,114 @@ bool IMU::buildReport()
   m_msgs << actab.getFormattedString();
   
   return (true);
+}
+
+void IMU::checkConnected()
+{
+  if (!m_open)
+  {
+    reportEvent("IMU not connected! Retrying...");
+    initIMU();
+    return;
+  }
+}
+
+void IMU::checkStatus()
+{
+  if (bno055_get_sys_stat_code(&m_status))
+  {
+    reportEvent("Error reading status!");
+    m_open = false;
+  }
+  
+  if (m_status == 1) // status = 1 indicates error
+  {
+    bno055_get_sys_error_code(&m_lastErrorCode);
+    std::string msg = "IMU Error code reported: " + std::to_string((unsigned int)m_lastErrorCode);
+    reportEvent(msg);
+  }
+}
+
+void IMU::readCalibration()
+{
+  if (bno055_get_sys_calib_stat(&m_sysCalStatus))
+  {
+    reportEvent("Failed to get system calibration data");
+    m_open = false;
+    return;
+  }
+  
+  if (m_sysCalStatus == 0)
+  {
+    reportEvent("IMU not calibrated - lost absolute orientation");
+  }
+  
+  Notify("IMU_CALIB_STATUS", m_sysCalStatus);
+}
+
+void IMU::readEuler()
+{
+  if (bno055_convert_double_euler_hpr_deg(&m_euler))
+  {
+    reportEvent("Failed to get euler data");
+    m_open = false;
+    return;
+  }
+  
+  Notify("IMU_EULER_P", m_euler.p);
+  Notify("IMU_EULER_R", m_euler.r);
+  Notify("IMU_EULER_H", m_euler.h);
+}
+
+void IMU::readQuaternion()
+{
+  if (bno055_read_quaternion_wxyz(&m_quaternion))
+  {
+    reportEvent("Failed to get Quaternion");
+    m_open = false;
+    return;
+  }
+  
+  Notify("IMU_QUATERNION_X", m_quaternion.x);
+  Notify("IMU_QUATERNION_Y", m_quaternion.y);
+  Notify("IMU_QUATERNION_Z", m_quaternion.z);
+  Notify("IMU_QUATERNION_W", m_quaternion.w);
+}
+
+bool IMU::checkPOST()
+{
+  int comrslt = 0;
+  unsigned char stMCU = 0, stAcc = 0, stGyr = 0, stMag = 0;
+  
+  comrslt += bno055_get_selftest_mcu(&stMCU);
+  comrslt += bno055_get_selftest_accel(&stAcc);
+  comrslt += bno055_get_selftest_gyro(&stGyr);
+  comrslt += bno055_get_selftest_mag(&stMag);
+  
+  if (comrslt)
+  {
+    reportEvent("Error reading POST");
+    m_open = false;
+    return 0;
+  }
+  
+  if (stMCU == 0)
+  {
+    reportEvent("MCU self test failed!");
+  }
+  
+  if (stAcc == 0)
+  {
+    reportEvent("Accelerometer self test failed!");
+  }
+  
+  if (stGyr == 0)
+  {
+    reportEvent("Gyroscope self test failed!");
+  }
+  
+  if (stMag == 0)
+  {
+    reportEvent("Magnetometer self test failed!");
+  }
 }
