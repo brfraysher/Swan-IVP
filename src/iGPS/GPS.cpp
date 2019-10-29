@@ -101,7 +101,7 @@ bool GPS::Iterate()
     retractRunWarning("GPS1 lock lost");
     Notify("GPS1_LOCKED", m_gps->fix.locked());
     Notify("GPS1_LAT", m_gps->fix.latitude);
-    Notify("GPS1_LON", m_gps->fix.longitude);
+    Notify("GPS1_LONG", m_gps->fix.longitude);
     Notify("GPS1_SPEED", m_gps->fix.speed);
     Notify("GPS1_HEADING", m_gps->fix.travelAngle);
     Notify("GPS1_QUALITY", m_gps->fix.quality);

@@ -20,6 +20,8 @@ ADD_SUBDIRECTORY(pExampleApp)
 ADD_SUBDIRECTORY(iGPS)
 #ADD_SUBDIRECTORY(MotorControl)
 ADD_SUBDIRECTORY(iMotorController)
+ADD_SUBDIRECTORY(pLocalization)
+
 ##############################################################################
 #                           END of CMakeLists.txt
 ##############################################################################
