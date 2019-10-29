@@ -1,15 +1,15 @@
 /************************************************************/
 /*    NAME: Andrew Sucato                                              */
-/*    ORGN: MIT                                             */
+/*    ORGN: The University of Alabama                       */
 /*    FILE: main.cpp                                        */
-/*    DATE: December 29th, 1963                             */
+/*    DATE: 10/03/19                                          */
 /************************************************************/
 
 #include <string>
 #include "MBUtils.h"
 #include "ColorParse.h"
-#include "GPS.h"
-#include "GPS_Info.h"
+#include "IMU.h"
+#include "IMU_Info.h"
 
 using namespace std;
 
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 {
   string mission_file;
   string run_command = argv[0];
-
+  
   for (int i = 1;
        i < argc;
        i++)
@@ -57,14 +57,14 @@ int main(int argc, char *argv[])
   {
     showHelpAndExit();
   }
-
+  
   cout << termColor("green");
-  cout << "iGPS launching as " << run_command << endl;
+  cout << "iIMU launching as " << run_command << endl;
   cout << termColor() << endl;
-
-  GPS GPS;
-
-  GPS.Run(run_command.c_str(), mission_file.c_str());
+  
+  IMU IMU;
+  
+  IMU.Run(run_command.c_str(), mission_file.c_str());
   
   return (0);
 }

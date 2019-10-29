@@ -1,10 +1,10 @@
 // Level 2 Configuration file: M. Benjamin
 
-ServerHost = 192.168.1.143
+ServerHost = localhost
 ServerPort = 9000
-Simulator  = true
+Simulator  = false 
 
-Community  = alder
+Community  = IMUTest
 
 MOOSTimeWarp = 1
 
@@ -17,17 +17,46 @@ ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
 
-//  Run = MOOSDB		@ NewConsole = false
-//  Run = uSimMarine	@ NewConsole = false
-//  Run = pNodeReporter	@ NewConsole = false
-//  Run = pMarinePID	@ NewConsole = false
-  Run = pMarineViewer	@ NewConsole = false
-//  Run = uProcessWatch   @ NewConsole = false
-//  Run = pHelmIvP	@ NewConsole = false
-//  Run = pOdometry	@ NewConsole = false
+  Run = MOOSDB			@ NewConsole = false
+  Run = pLogger			@ NewConsole = false
+  Run = iIMU            @ NewConsole = true
 }
 
-//------------------------------------------
+ProcessConfig = iIMU
+{
+    AppTick = 10
+    CommsTick = 10
+}
+
+ProcessConfig = iMotorController
+{
+  AppTick	= 10
+  CommsTick	= 10
+
+  Address   = /dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_5573631303835111D1B1-if00
+  Baud      = 115200
+}
+
+
+ProcessConfig = pLogger
+{
+  AppTick   = 8
+  CommsTick = 8
+
+  AsyncLog = true
+
+  // For variables that are published in a bundle on their first post,
+  // explicitly declare their logging request
+  Log = IVPHELM_LIFE_EVENT @ 0 NOSYNC
+  Log = REPORT @ 0 NOSYNC
+
+  LogAuxSrc = true
+  WildCardLogging = true
+  WildCardOmitPattern = *_STATUS
+  WildCardOmitPattern = DB_VARSUMMARY
+  WildCardOmitPattern = DB_RWSUMMARY
+  WildCardExclusionLog = true
+}
 // uSimMarine config block
 
 ProcessConfig = uSimMarine
@@ -71,7 +100,7 @@ ProcessConfig = pHelmIvP
   AppTick    = 4
   CommsTick  = 4
 
-  Behaviors  = alder.bhv
+  Behaviors  = IMUTest.bhv
   Verbose    = quiet
   Domain     = course:0:359:360
   Domain     = speed:0:4:21
@@ -79,7 +108,7 @@ ProcessConfig = pHelmIvP
   IVP_BEHAVIOR_DIR = ../../lib
 
   ok_skew = any
-  start_in_drive = false
+  start_in_drive = true
 }
 
 //------------------------------------------

@@ -19,30 +19,31 @@
 class GPS : public AppCastingMOOSApp
 {
 public:
-    GPS();
-    ~GPS();
+  GPS();
+
+  ~GPS();
 
 protected: // Standard MOOSApp functions to overload
-    bool OnNewMail(MOOSMSG_LIST &NewMail);
+  bool OnNewMail(MOOSMSG_LIST &NewMail);
 
-    bool Iterate();
+  bool Iterate();
 
-    bool OnConnectToServer();
+  bool OnConnectToServer();
 
-    bool OnStartUp();
+  bool OnStartUp();
 
 protected: // Standard AppCastingMOOSApp function to overload
-    bool buildReport();
+  bool buildReport();
 
 protected:
-    void registerVariables();
+  void registerVariables();
 
 private: // Configuration variables
 
 private: // State variables
-    serial::Serial* m_comPort;
-    nmea::NMEAParser* m_parser;
-    nmea::GPSService* m_gps;
+  serial::Serial *m_comPort;
+  nmea::NMEAParser *m_parser;
+  nmea::GPSService *m_gps;
 };
 
 #endif 
