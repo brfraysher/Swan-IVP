@@ -316,7 +316,7 @@ bool IMU::checkPOST()
   {
     reportEvent("Error reading POST");
     m_open = false;
-    return 0;
+    return false;
   }
   
   if (stMCU == 0)

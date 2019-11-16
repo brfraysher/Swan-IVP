@@ -36,6 +36,11 @@ class Localization : public AppCastingMOOSApp
    double m_long;
    double m_heading;
    double m_speed;
+   
+   double m_north;
+   double m_east;
+   
+   double m_headingBias;
 
    bool m_geo_ok;
 

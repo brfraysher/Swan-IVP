@@ -1,0 +1,173 @@
+
+ServerHost   = localhost
+ServerPort   = 9000
+Community    = shoreside
+MOOSTimeWarp = 1
+
+// Lake Palmer
+LatOrigin  = 33.218004
+LongOrigin = -87.547964
+
+
+// Forest Lake
+//LatOrigin  = 43.825300
+//LongOrigin = -70.330400
+
+//------------------------------------------
+// Antler configuration  block
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB            @ NewConsole = false
+  Run = pMarineViewer	  @ NewConsole = false
+  Run = pShare            @ NewConsole = false
+  Run = uProcessWatch	  @ NewConsole = false
+//  Run = uFldShoreBroker   @ NewConsole = false
+//  Run = pHostInfo
+}
+
+ProcessConfig = pShare
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  input = route=localhost:10000
+  output = src_name=APPCAST_REQ, route=192.168.1.130:10000
+  output = src_name=DEPLOY, route=192.168.1.130:10000
+  output = src_name=RETURN, route=192.168.1.130:10000
+  output = src_name=MOOS_MANUAL_OVERRIDE, route=192.168.1.130:10000
+}
+
+ProcessConfig = uFldShoreBroker
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  warning_on_stale = false // (default)
+
+  bridge = src=DEPLOY_ALL, alias=DEPLOY
+  bridge = src=DEPLOY_$V,  alias=DEPLOY
+
+  qbridge = RETURN
+  qbridge = NODE_REPORT // STATION_KEEP
+
+  // bridge = src=UP_LOITER_$N, alias=UP_LOITER
+
+  // Note: [qbridge = FOO]  is shorthand for
+  //       [bridge = src=FOO_$V,  alias=FOO] and
+  //       [bridge = src=FOO_ALL, alias=FOO]
+}
+
+ProcessConfig = pHostInfo
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  TEMP_FILE_DIR  = ./
+  DEFAULT_HOSTIP = 192.168.0.55    // default is "localhost"
+
+  DEFAULT_HOSTIP_FORCE = 192.168.0.55
+}
+
+ProcessConfig = pMarineViewer
+{
+  AppTick    = 4
+  CommsTick  = 4
+
+    tiff_file           = ../../data/lakePalmer.tif
+  //tiff_file            = forrest19.tif
+	//tiff_file            = MIT_SP.tif
+
+  set_pan_x            = -90
+  set_pan_y            = -280
+  zoom                 = 0.65
+  vehicle_shape_scale  = 1.5
+  hash_delta           = 50
+  hash_shade           = 0.22
+  hash_viewable        = true
+
+  trails_point_size   = 1
+
+	//op_vertex = x=-83, y=-47,    lwidth=1,lcolor=yellow,looped=true,group=moa
+  //op_vertex = x=-46.4, y=-129.2, lwidth=1,lcolor=yellow,looped=true,group=moa
+  //op_vertex = x=94.6, y=-62.2,   lwidth=1,lcolor=yellow,looped=true,group=moa
+  //op_vertex = x=58,   y=20,    lwidth=1,lcolor=yellow,looped=true,group=moa
+
+	// vcolor = alpha=dodgerblue
+
+  // Appcast configuration
+  appcast_height       = 75
+  appcast_width        = 30
+  appcast_viewable     = true
+  appcast_color_scheme = indigo
+  nodes_font_size      = medium
+  procs_font_size      = medium
+  appcast_font_size    = small
+
+  // datum_viewable = true
+  // datum_size     = 18
+  // gui_size = small
+
+  // left_context[survey-point] = DEPLOY=true
+  // left_context[survey-point] = MOOS_MANUAL_OVERRIDE=false
+  // left_context[survey-point] = RETURN=false
+
+  right_context[return] = DEPLOY=true
+  right_context[return] = MOOS_MANUAL_OVERRIDE=false
+  right_context[return] = RETURN=false
+
+  scope  = RETURN
+  scope  = WPT_STAT
+  scope  = VIEW_SEGLIST
+  scope  = VIEW_POINT
+  scope  = VIEW_POLYGON
+  scope  = MVIEWER_LCLICK
+  scope  = MVIEWER_RCLICK
+
+  button_one = DEPLOY # DEPLOY=true
+  button_one = MOOS_MANUAL_OVERRIDE=false # RETURN=false
+
+  button_two = RETURN # RETURN=true # MOOS_MANUAL_OVERRIDE=false # DEPLOY=true
+
+  button_three = STOP # DEPLOY=false # RETURN=false # MOOS_MANUAL_OVERRIDE=true
+
+  action  = MENU_KEY=deploy # DEPLOY = true # RETURN = false
+  action+ = MENU_KEY=deploy # MOOS_MANUAL_OVERRIDE=false
+  action  = RETURN=true
+  action  = UPDATES_RETURN=speed=1.4
+}
+
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  allow_retractions = true
+  summary_wait = 10
+  watch_all = true
+	nowatch   = uPokeDB*
+	nowatch   = uXMS*
+}
+
+ProcessConfig = uMAC
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  // No parameters defined specific to uMAC
+}
+
+ProcessConfig = uMACView
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  procs_font_size   = medium  // (xsmall, small, medium, large)
+  nodes_font_size   = medium  // (xsmall, small, medium, large)
+  appcast_font_size = small   // (xsmall, small, medium, large)
+
+  appcast_color_scheme = default  // {default, indigo, beige}
+  appcast_height       = 70       // [30,35,40,...,85,90]
+  refresh_mode         = events   // {paused, events, streaming}
+}
