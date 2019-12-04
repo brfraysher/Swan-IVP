@@ -1,0 +1,2 @@
+To upload from the upboard to the Arduino, the following command is needed:
+    ```arduino --upload Kayak_SplitControl.ino```

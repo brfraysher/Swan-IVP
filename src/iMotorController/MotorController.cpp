@@ -6,6 +6,8 @@
 /************************************************************/
 
 #include <iterator>
+#include <chrono>
+#include <thread>
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "MotorController.h"
@@ -18,10 +20,12 @@ MotorController::MotorController()
         : m_address("UNINITIALIZED"),
           m_baud(0),
           m_rudder(0),
-          m_thrust(0),
-          m_leftMotorSpeed(90),
-          m_rightMotorSpeed(90)
+          m_thrust(0)
+          //m_leftMotorSpeed(90),
+          //m_rightMotorSpeed(90)
 {
+  std::system("stty -F /dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_5573631303835111D1B1-if00 -hupcl");
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
 //---------------------------------------------------------
@@ -90,28 +94,43 @@ bool MotorController::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
-    double left_command;
-    double right_command;
+//    double left_command;
+//    double right_command;
+//
+//    left_command = m_thrust + m_rudder + 90;
+//    right_command = m_thrust - m_rudder + 90;
+//
+//    left_command = std::min(160.0, std::max(20.0, left_command));
+//    right_command = std::min(160.0, std::max(20.0, right_command));
+//
+//    m_rightMotorSpeed = right_command;
+//    m_leftMotorSpeed = left_command;
+//
+//    uint8_t left = static_cast<uint8_t>(left_command);
+//    uint8_t right = static_cast<uint8_t>(right_command);
+//
+//    std::vector<uint8_t> data = {'K', left, right, '\n'};
+  
+  uint8_t rudder = static_cast<uint8_t >(m_rudder);
+  uint8_t thrust = static_cast<uint8_t >(m_thrust);
 
-    left_command = m_thrust + m_rudder + 90;
-    right_command = m_thrust - m_rudder + 90;
-
-    left_command = std::min(160.0, std::max(20.0, left_command));
-    right_command = std::min(160.0, std::max(20.0, right_command));
-
-    m_rightMotorSpeed = right_command;
-    m_leftMotorSpeed = left_command;
-
-    uint8_t left = static_cast<uint8_t>(left_command);
-    uint8_t right = static_cast<uint8_t>(right_command);
-
-    std::vector<uint8_t> data = {'K', left, right, '\n'};
+  std::vector<uint8_t> data = {'K', rudder, thrust, '\n'};
   
   const std::string arduinoPortWarning = "Arduino Port not open!!!";
   if (m_port.isOpen())
   {
     retractRunWarning(arduinoPortWarning);
     m_port.write(data);
+    
+    while (m_port.available() > 3)
+    {
+      if (m_port.read() == "K")
+      {
+        m_arduinoMsg += m_port.readline();
+      }
+    }
+    
+    Notify("ARDUINO_MSG", m_arduinoMsg);
   }
   else
   {
@@ -206,6 +225,11 @@ bool MotorController::buildReport()
   actab << "" << "";
   actab << "Left Motor Speed" << m_leftMotorSpeed;
   actab << "Right Motor Speed" << m_rightMotorSpeed;
+  actab << "" << "";
+  actab << "Arduino message" << m_arduinoMsg;
+  
+  m_arduinoMsg.clear();
+  
   m_msgs << actab.getFormattedString();
   
   return (true);

@@ -41,6 +41,7 @@ ProcessConfig = ANTLER
   Run = pLocalization   @ NewConsole = false
   Run = iMotorController    @ NewConsole = false
 
+//  Run = uMAC            @ NewConsole = false
 //  Run = uXMS              @ NewConsole = false
 //  Run = uFldNodeBroker  @ NewConsole = false
 //  Run = pHostInfo       @ NewConsole = false
@@ -308,5 +309,13 @@ ProcessConfig = iMotorController
 
   Address   = /dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_5573631303835111D1B1-if00
   Baud      = 115200
+}
+
+ProcessConfig = uXMS
+{
+  AppTick = 4
+  CommsTick = 4
+
+  display_all = true
 }
 
