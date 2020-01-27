@@ -1,8 +1,8 @@
 /************************************************************/
 /*    NAME: Andrew Sucato                                   */
 /*    ORGN: The University of Alabama                       */
-/*    FILE: MotorController.cpp                                        */
-/*    DATE: 04/12/19                                          */
+/*    FILE: MotorController.cpp                             */
+/*    DATE: 04/12/19                                        */
 /************************************************************/
 
 #include <iterator>
