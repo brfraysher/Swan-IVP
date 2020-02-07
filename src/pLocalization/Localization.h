@@ -34,8 +34,9 @@ class Localization : public AppCastingMOOSApp
  private: // State variables
    double m_lat;
    double m_long;
-   double m_heading;
-   double m_speed;
+   double m_headingIMU;
+   double m_headingGPS1;
+   double m_speedGPS1;
    
    double m_north;
    double m_east;

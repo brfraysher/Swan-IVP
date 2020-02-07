@@ -52,9 +52,11 @@ bool Localization::OnNewMail(MOOSMSG_LIST &NewMail)
      else if (key == "GPS1_LON")
        m_long = msg.GetDouble();
      else if (key == "IMU_EULER_H")
-       m_heading = msg.GetDouble();
+         m_headingIMU = msg.GetDouble();
+     else if (key == "GPS1_HEADING")
+         m_headingGPS1 = msg.GetDouble();
      else if (key == "GPS1_SPEED")
-       m_speed = msg.GetDouble();
+         m_speedGPS1 = msg.GetDouble();
 
 
      else if(key != "APPCAST_REQ") // handled by AppCastingMOOSApp
@@ -91,22 +93,29 @@ bool Localization::Iterate()
 //  double east;
 
   // Apply bias to heading
-  m_heading = (m_heading + m_headingBias);
-  if (m_heading > 360)
+  m_headingIMU = (m_headingIMU + m_headingBias);
+  if (m_headingIMU > 360)
   {
-    m_heading -= 360;
+      m_headingIMU -= 360;
   }
-  else if (m_heading < 0)
+  else if (m_headingIMU < 0)
   {
-    m_heading += 360;
+      m_headingIMU += 360;
   }
 
   m_geodesy.LatLong2LocalUTM(m_lat, m_long, m_north, m_east);
   Notify("NAV_Y", m_north);
   Notify("NAV_X", m_east);
 
-  Notify("NAV_HEADING", m_heading);
-  Notify("NAV_SPEED", m_speed);
+  if (m_speedGPS1 > 0.5)
+  {
+      Notify("NAV_HEADING", m_headingGPS1);
+  }
+  else
+  {
+      Notify("NAV_HEADING", m_headingIMU);
+  }
+  Notify("NAV_SPEED", m_speedGPS1);
 
   AppCastingMOOSApp::PostReport();
   return(true);
@@ -203,8 +212,8 @@ bool Localization::buildReport()
   actab << "Longitude" << m_long;
   actab << "North" << m_north;
   actab << "East" << m_east;
-  actab << "Speed" << m_speed;
-  actab << "Heading" << m_heading;
+  actab << "Speed" << m_speedGPS1;
+  actab << "Heading" << m_headingIMU;
   m_msgs << actab.getFormattedString();
 
   return(true);
