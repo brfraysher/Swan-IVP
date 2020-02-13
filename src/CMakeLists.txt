@@ -18,6 +18,7 @@ ADD_SUBDIRECTORY(iGPS)
 ADD_SUBDIRECTORY(iMotorController)
 ADD_SUBDIRECTORY(pLocalization)
 ADD_SUBDIRECTORY(iIMU)
+ADD_SUBDIRECTORY(lib_Hardware)
 ##############################################################################
 #                           END of CMakeLists.txt
 ##############################################################################
