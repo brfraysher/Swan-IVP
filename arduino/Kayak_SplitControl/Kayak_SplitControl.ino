@@ -11,9 +11,9 @@ Servo right;
 #define LMPin 12
 #define RMPin 13
 
-#define RedPin 0
-#define GreenPin 0
-#define BluePin 0
+#define RedPin 9
+#define GreenPin 10
+#define BluePin 11
 
 #define ch1Min 1000
 #define ch2Min 1000
@@ -274,9 +274,9 @@ void UpdateLights()
       Blue = 0;
       break;
     case 3: //Yellow
-      Red = 0;
+      Red = 255;
       Green = 255;
-      Blue = 255;
+      Blue = 0;
       break;
     case 4: //Red
       Red = 255;
