@@ -71,8 +71,7 @@ bool MotorController::OnNewMail(MOOSMSG_LIST &NewMail)
       m_thrust = msg.GetDouble();
     }
     else if (key == "GPS1_STATUS"){
-      std::string tmp = msg.GetString();
-      m_gps_active = (tmp == "A");
+      m_gps_active = (msg.GetDouble() == 65);
     }
     else if (key == "IMU_STATUS"){
       m_imu_active = (msg.GetDouble() == 1);
