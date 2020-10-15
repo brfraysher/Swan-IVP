@@ -40,8 +40,10 @@ private: // State variables
   
   double m_rudder;
   double m_thrust;
-    double m_leftMotorSpeed;
-    double m_rightMotorSpeed;
+  double m_leftMotorSpeed;
+  double m_rightMotorSpeed;
+  bool m_imu_active;
+  bool m_gps_active;
   
   std::string m_arduinoMsg;
 };
