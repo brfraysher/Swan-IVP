@@ -21,8 +21,8 @@ MotorController::MotorController()
           m_baud(0),
           m_rudder(0),
           m_thrust(0),
-          m_imu_status(0),
-          m_gps_status(0)
+          m_imu_active(0),
+          m_gps_active(0)
           //m_leftMotorSpeed(90),
           //m_rightMotorSpeed(90)
 {
@@ -71,7 +71,8 @@ bool MotorController::OnNewMail(MOOSMSG_LIST &NewMail)
       m_thrust = msg.GetDouble();
     }
     else if (key == "GPS1_STATUS"){
-      m_gps_active = (msg.GetString() == "A");
+      std::string tmp = msg.GetString();
+      m_gps_active = (tmp == "A");
     }
     else if (key == "IMU_STATUS"){
       m_imu_active = (msg.GetDouble() == 1);
@@ -225,6 +226,8 @@ void MotorController::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("DESIRED_RUDDER");
   Register("DESIRED_THRUST");
+  Register("GPS1_STATUS");
+  Register("IMU_STATUS");
 }
 
 
