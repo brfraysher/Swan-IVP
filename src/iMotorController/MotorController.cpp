@@ -70,11 +70,11 @@ bool MotorController::OnNewMail(MOOSMSG_LIST &NewMail)
     {
       m_thrust = msg.GetDouble();
     }
-    else if (key == "GPS1_STATUS"){
-      m_gps_active = (msg.GetDouble() == 65);
+    else if (key == "GPS1_QUALITY"){
+      m_gps_active = (msg.GetDouble() > 0);
     }
-    else if (key == "IMU_STATUS"){
-      m_imu_active = (msg.GetDouble() == 1);
+    else if (key == "IMU_CALIB_STATUS"){
+      m_imu_active = (msg.GetDouble() > 0);
     }
     else if (key != "APPCAST_REQ")
     { // handled by AppCastingMOOSApp
@@ -225,8 +225,8 @@ void MotorController::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("DESIRED_RUDDER");
   Register("DESIRED_THRUST");
-  Register("GPS1_STATUS");
-  Register("IMU_STATUS");
+  Register("GPS1_QUALITY");
+  Register("IMU_CALIB_STATUS");
 }
 
 

@@ -20,5 +20,6 @@ TARGET_LINK_LIBRARIES(iIMU
         mbutil
         m
         pthread
+        i2c
         )
 
