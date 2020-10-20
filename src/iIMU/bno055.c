@@ -62,15 +62,18 @@
 #include <sys/ioctl.h>
 
 #include <linux/i2c-dev.h>
-#include <linux/i2c.h>
-#include <errno.h>
+#include <i2c/smbus.h>
+
+
+//#include <linux/i2c.h>
+//#include <errno.h>
 
 /*! file <BNO055 >
     brief <Sensor driver for BNO055> */
 /*	STRUCTURE DEFINITIONS	*/
 static struct bno055_t *p_bno055;
 
-static inline __s32 i2c_smbus_access(int file, char read_write, __u8 command,
+/*static inline __s32 i2c_smbus_access(int file, char read_write, __u8 command,
            int size, union i2c_smbus_data *data)
 {
     struct i2c_smbus_ioctl_data args;
@@ -106,7 +109,7 @@ static inline __s32 i2c_smbus_read_byte_data(int file, __u8 command)
         return err;
 
     return 0x0FF & data.byte;
-}
+}*/
 
 s8 bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 wr_len)
 {

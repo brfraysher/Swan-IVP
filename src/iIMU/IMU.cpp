@@ -15,9 +15,10 @@
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
 
-extern "C" {
-#include "bno055.h"
+extern "C"{
+  #include "bno055.h"
 }
+
 
 
 //---------------------------------------------------------
