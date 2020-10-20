@@ -40,7 +40,7 @@ protected:
   bool checkPOST();
   void checkConnected();
   void checkStatus();
-  
+  void sendStatus();
   void readCalibration();
   void readEuler();
   void readQuaternion();

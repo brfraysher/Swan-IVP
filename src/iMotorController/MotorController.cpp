@@ -20,7 +20,9 @@ MotorController::MotorController()
         : m_address("UNINITIALIZED"),
           m_baud(0),
           m_rudder(0),
-          m_thrust(0)
+          m_thrust(0),
+          m_imu_active(0),
+          m_gps_active(0)
           //m_leftMotorSpeed(90),
           //m_rightMotorSpeed(90)
 {
@@ -68,6 +70,12 @@ bool MotorController::OnNewMail(MOOSMSG_LIST &NewMail)
     {
       m_thrust = msg.GetDouble();
     }
+    else if (key == "GPS1_STATUS"){
+      m_gps_active = (msg.GetDouble() == 65);
+    }
+    else if (key == "IMU_STATUS"){
+      m_imu_active = (msg.GetDouble() == 1);
+    }
     else if (key != "APPCAST_REQ")
     { // handled by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
@@ -111,10 +119,18 @@ bool MotorController::Iterate()
 //
 //    std::vector<uint8_t> data = {'K', left, right, '\n'};
   
+  /*autonomy states:
+    imu & gps active - 3, 
+    only gps - 2, 
+    only imu - 1, 
+    neither - 0
+  */
+  uint8_t autonomy_status = (m_imu_active && m_gps_active) ? 3 : (m_gps_active ? 2 : (m_imu_active ? 1 : 0));
+  
   uint8_t rudder = static_cast<uint8_t >(m_rudder);
   uint8_t thrust = static_cast<uint8_t >(m_thrust);
 
-  std::vector<uint8_t> data = {'K', rudder, thrust, '\n'};
+  std::vector<uint8_t> data = {'K', rudder, thrust, autonomy_status, '\n'};
   
   const std::string arduinoPortWarning = "Arduino Port not open!!!";
   if (m_port.isOpen())
@@ -209,6 +225,8 @@ void MotorController::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("DESIRED_RUDDER");
   Register("DESIRED_THRUST");
+  Register("GPS1_STATUS");
+  Register("IMU_STATUS");
 }
 
 

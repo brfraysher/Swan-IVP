@@ -17,7 +17,7 @@ LongOrigin = -87.547964
 //LatOrigin  = 43.825300
 //LongOrigin = -70.330400
 
-// MIT Sailing Pavilion (use this one)
+// MIT Sailing Pavilion
 // LatOrigin  = 42.358456 
 // LongOrigin = -71.087589
 
@@ -53,10 +53,10 @@ ProcessConfig = pShare
     CommsTick = 2
 
     input = route=localhost:10000
-    output = src_name=NODE_REPORT_LOCAL, dest_name=NODE_REPORT, route=192.168.1.126:10000
-    output = src_name=VIEW_POINT, route=192.168.1.126:10000
-    output = src_name=VIEW_SEGLIST, route=192.168.1.126:10000
-    output = src_name=APPCAST*, route=192.168.1.126:10000
+    output = src_name=NODE_REPORT_LOCAL, dest_name=NODE_REPORT, route=192.168.1.125:10000
+    output = src_name=VIEW_POINT, route=192.168.1.125:10000
+    output = src_name=VIEW_SEGLIST, route=192.168.1.125:10000
+    output = src_name=APPCAST*, route=192.168.1.125:10000
 }
 
 ProcessConfig = iIMU

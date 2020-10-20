@@ -148,7 +148,8 @@ bool IMU::Iterate()
   readCalibration();
   readEuler();
   readQuaternion();
-  
+  sendStatus();
+
   AppCastingMOOSApp::PostReport();
   return (true);
 }
@@ -254,6 +255,11 @@ void IMU::checkStatus()
     std::string msg = "IMU Error code reported: " + std::to_string((unsigned int)m_lastErrorCode);
     reportEvent(msg);
   }
+}
+
+void IMU::sendStatus()
+{
+  Notify("IMU_STATUS",m_status);
 }
 
 void IMU::readCalibration()
