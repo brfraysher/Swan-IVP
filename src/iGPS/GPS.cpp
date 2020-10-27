@@ -198,7 +198,8 @@ bool GPS::buildReport()
   actab << "Param | Value";
   actab.addHeaderLines();
   actab << "Locked" << m_gps->fix.locked();
-  actab << "Status" << (char)m_gps->fix.status;
+  actab << "Status" << m_gps->fix.status;
+  actab << "Quality" << m_gps->fix.quality;
   actab << "Tracking Sats" << m_gps->fix.trackingSatellites;
   actab << "Visible Sats" << m_gps->fix.visibleSatellites;
   actab << "Current Latitude" << m_gps->fix.latitude;
