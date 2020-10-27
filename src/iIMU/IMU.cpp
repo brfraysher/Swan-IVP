@@ -76,9 +76,9 @@ void IMU::initIMU()
     return;
   }
 
-  if(m_savedCal){
+  /*if(m_savedCal){
     writeSystemCalibration();
-  }
+  }*/
   
   if (bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF))
   {
@@ -305,11 +305,11 @@ void IMU::readCalibrationStatus()
   {
     reportEvent("IMU not calibrated - lost absolute orientation");
   }
-  if (m_sysCalStatus == 3 && !m_savedCal){
+  /*if (m_sysCalStatus == 3 && !m_savedCal){
     reportEvent("Reading Calibration Status");
     readCalibrationStatus();
     m_savedCal = true;
-  }
+  }*/
   
   Notify("IMU_SYS_CALIB_STATUS", m_sysCalStatus);
   Notify("IMU_ACC_CALIB_STATUS", m_accelCalStatus);
