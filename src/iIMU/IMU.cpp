@@ -306,6 +306,7 @@ void IMU::readCalibrationStatus()
     reportEvent("IMU not calibrated - lost absolute orientation");
   }
   if (m_sysCalStatus == 3 && !m_savedCal){
+    reportEvent("Reading Calibration Status");
     readCalibrationStatus();
     m_savedCal = true;
   }
@@ -429,7 +430,7 @@ u8 IMU::writeSystemCalibration()
   return 0;
 }
 
-void IMU::calibrateIMU(u32 max_timeout)
+/*void IMU::calibrateIMU(u32 max_timeout)
 {
   bool calibrated = BEST_CALIBRATION;
   u32 start = clock();
@@ -441,4 +442,4 @@ void IMU::calibrateIMU(u32 max_timeout)
   }
   //IMU should now have perfect calibration status
   readSystemCalibration();
-}
+}*/
