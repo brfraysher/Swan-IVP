@@ -35,6 +35,7 @@ IMU::IMU()
         m_lastErrorCode(0),
         m_i2cAddr("/dev/i2c-1"),
         m_euler({0}),
+        m_savedCal(false),
         m_quaternion({0})
         
 {
@@ -74,6 +75,10 @@ void IMU::initIMU()
     reportEvent("Failed to initialize IMU!");
     return;
   }
+
+  if(m_savedCal){
+    writeSystemCalibration();
+  }
   
   if (bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF))
   {
@@ -87,19 +92,6 @@ void IMU::initIMU()
     return;
   }
   
- 
-  int calibSum = 0;
-  for(int i=0; i<22; i++) calibSum += m_systemCalibration[i];
-  if(calibSum == 0) calibrateIMU(10*CLOCKS_PER_SEC);
-  else
-  { 
-    if(writeSystemCalibration()) //previous calibration exists, attempt to load it.
-    {
-      //Write failed. Recalibrate manually
-      calibrateIMU(10000);
-    }
-  }
-
   m_open = true;
 }
 
@@ -313,6 +305,10 @@ void IMU::readCalibrationStatus()
   {
     reportEvent("IMU not calibrated - lost absolute orientation");
   }
+  if (m_sysCalStatus == 3 && !m_savedCal){
+    readCalibrationStatus();
+    m_savedCal = true;
+  }
   
   Notify("IMU_SYS_CALIB_STATUS", m_sysCalStatus);
   Notify("IMU_ACC_CALIB_STATUS", m_accelCalStatus);
@@ -426,7 +422,8 @@ u8 IMU::writeSystemCalibration()
   reportEvent("Writing calibration data");
   if(bno055_write_register(BNO055_ACCEL_OFFSET_X_LSB_REG,m_systemCalibration,22))
   {
-    reportEvent("Could not write calibration data. Recalibrating...");
+    reportEvent("Could not write calibration data.");
+    m_savedCal = false;
     return 1;
   }
   return 0;
