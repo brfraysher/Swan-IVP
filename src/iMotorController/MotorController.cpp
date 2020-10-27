@@ -226,7 +226,7 @@ void MotorController::registerVariables()
   Register("DESIRED_RUDDER");
   Register("DESIRED_THRUST");
   Register("GPS1_QUALITY");
-  Register("IMU_CALIB_STATUS");
+  Register("IMU_SYS_CALIB_STATUS");
 }
 
 
