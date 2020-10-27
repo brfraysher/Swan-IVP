@@ -90,7 +90,7 @@ void IMU::initIMU()
  
   int calibSum = 0;
   for(int i=0; i<22; i++) calibSum += m_systemCalibration[i];
-  if(calibSum == 0) calibrateIMU(10000);
+  if(calibSum == 0) calibrateIMU(10*CLOCKS_PER_SEC);
   else
   { 
     if(writeSystemCalibration()) //previous calibration exists, attempt to load it.
