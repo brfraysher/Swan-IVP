@@ -305,9 +305,10 @@ void IMU::readCalibrationStatus()
   {
     reportEvent("IMU not calibrated - lost absolute orientation");
   }
+
   if (m_sysCalStatus == 3 && !m_savedCal){
     reportEvent("Reading Calibration Status");
-    readCalibrationStatus();
+    readSystemCalibration();
     m_savedCal = true;
   }
   
