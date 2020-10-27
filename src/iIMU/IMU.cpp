@@ -303,7 +303,7 @@ void IMU::readCalibrationStatus()
     return;
   }
 
-  if(bno055_get_mag_calib_stat(&m_accelCalStatus)){
+  if(bno055_get_mag_calib_stat(&m_magCalStatus)){
     reportEvent("Failed to get magnetometer calibration data");
     m_open = false;
     return;
