@@ -150,6 +150,7 @@ bool MotorController::Iterate()
       }
       serialTimeout++;
     }
+    m_port.flushInput();
     
     Notify("ARDUINO_MSG", m_arduinoMsg);
   }
