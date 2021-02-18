@@ -142,7 +142,11 @@ bool MotorController::Iterate()
     {
       if (m_port.read() == "K")
       {
-        m_arduinoMsg += m_port.readline();
+        m_arduinoMsg = m_port.readline();
+      }
+       if (m_port.read() == "C")
+      {
+        compensation = m_port.readline();
       }
     }
     
@@ -153,13 +157,7 @@ bool MotorController::Iterate()
     reportRunWarning(arduinoPortWarning);
     return false;
   }
-   if (m_port.available() > 2)
-   {
-      if (m_port.read() == "C")
-      {
-        compensation = m_port.readline();
-      }
-   }
+  
 
   
   AppCastingMOOSApp::PostReport();
@@ -252,8 +250,9 @@ bool MotorController::buildReport()
   actab << "Left Motor Speed" << m_leftMotorSpeed;
   actab << "Right Motor Speed" << m_rightMotorSpeed;
   actab << "" << "";
-  actab << "Arduino message" << m_arduinoMsg;
   actab << "Compensation" << compensation;
+  actab << "Arduino message" << m_arduinoMsg;
+ 
   
   m_arduinoMsg.clear();
   
