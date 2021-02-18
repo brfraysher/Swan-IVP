@@ -73,7 +73,7 @@ bool MotorController::OnNewMail(MOOSMSG_LIST &NewMail)
     else if (key == "GPS1_QUALITY"){
       m_gps_active = (msg.GetDouble() > 0);
     }
-    else if (key == "IMU_CALIB_STATUS"){
+    else if (key == "IMU_SYS_CALIB_STATUS"){
       m_imu_active = (msg.GetDouble() > 0);
     }
     else if (key != "APPCAST_REQ")
@@ -226,7 +226,7 @@ void MotorController::registerVariables()
   Register("DESIRED_RUDDER");
   Register("DESIRED_THRUST");
   Register("GPS1_QUALITY");
-  Register("IMU_CALIB_STATUS");
+  Register("IMU_SYS_CALIB_STATUS");
 }
 
 
