@@ -138,7 +138,7 @@ bool MotorController::Iterate()
     retractRunWarning(arduinoPortWarning);
     m_port.write(data);
     
-    while (m_port.available() > 3)
+    while (m_port.available() > 1)
     {
       if (m_port.read(sizeof(char)) == "K")
       {
@@ -254,7 +254,6 @@ bool MotorController::buildReport()
   actab << "Arduino message" << m_arduinoMsg;
  
   
-  m_arduinoMsg.clear();
   
   m_msgs << actab.getFormattedString();
   
