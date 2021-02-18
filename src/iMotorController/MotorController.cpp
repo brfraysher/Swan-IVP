@@ -137,8 +137,8 @@ bool MotorController::Iterate()
   {
     retractRunWarning(arduinoPortWarning);
     m_port.write(data);
-    
-    while (m_port.available() > 1)
+    int serialTimeout = 0;
+    while (m_port.available() > 1 && serialTimeout < 10)
     {
       if (m_port.read(sizeof(char)) == "K")
       {
@@ -148,6 +148,7 @@ bool MotorController::Iterate()
       {
         compensation = m_port.readline();
       }
+      serialTimeout++;
     }
     
     Notify("ARDUINO_MSG", m_arduinoMsg);
