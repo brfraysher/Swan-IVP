@@ -140,11 +140,11 @@ bool MotorController::Iterate()
     
     while (m_port.available() > 3)
     {
-      if (m_port.read() == "K")
+      if (m_port.read(sizeof(char)) == "K")
       {
         m_arduinoMsg = m_port.readline();
       }
-       if (m_port.read() == "C")
+       if (m_port.read(sizeof(char)) == "C")
       {
         compensation = m_port.readline();
       }
