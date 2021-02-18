@@ -46,6 +46,7 @@ private: // State variables
   bool m_gps_active;
   
   std::string m_arduinoMsg;
+  std::string compensation;
 };
 
 #endif
