@@ -58,7 +58,7 @@ private: // Configuration variables
   u8 m_gyroCalStatus;
   u8 m_magCalStatus;
   u8 m_lastErrorCode;
-  int m_calib_test;
+  u8 m_calib_test;
   std::string m_i2cAddr;
   bno055_t m_bno055;
   bno055_euler_double_t m_euler;
