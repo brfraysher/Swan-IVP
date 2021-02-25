@@ -193,10 +193,10 @@ bool IMU::OnStartUp()
     bool handled = false;
     if (param == "CONFIG")
     {
-      handled = true;
-    }
-    else if (param == "BAR")
-    {
+      for(int i=0; i<22; i++){
+        u8 val = u8(std::stoul(biteStringX(value,' ')));
+        m_systemCalibration[i] = val;
+      }
       handled = true;
     }
     
@@ -239,6 +239,7 @@ bool IMU::buildReport()
   actab << "Accel Calib Status" << m_accelCalStatus;
   actab << "Gyro Calib Status" << m_gyroCalStatus;
   actab << "Mag Calib Status" << m_magCalStatus;
+  actab << "Test calib" << m_systemCalibration[4];
   actab << "Heading" << m_euler.h;
   m_msgs << actab.getFormattedString();
   
@@ -308,10 +309,10 @@ void IMU::readCalibrationStatus()
     reportEvent("IMU not calibrated - lost absolute orientation");
   }
 
-  if (BEST_CALIBRATION && !m_savedCal){
+  /*if (BEST_CALIBRATION && !m_savedCal){
     readSystemCalibration();
     m_savedCal = true;
-  }
+  }*/
   
   Notify("IMU_SYS_CALIB_STATUS", m_sysCalStatus);
   Notify("IMU_ACC_CALIB_STATUS", m_accelCalStatus);
@@ -389,7 +390,7 @@ bool IMU::checkPOST()
 void IMU::readSystemCalibration()
 {
   u8 oprMode = 0;
-  std::ofstream cFile ("example.txt",std::ios::out | std::ios::binary);
+  std::ofstream cFile ("example.dat",std::ios::out | std::ios::binary);
   if(bno055_get_operation_mode(&oprMode))
   {
     reportEvent("Could not read operating mode");
