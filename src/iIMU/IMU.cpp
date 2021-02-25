@@ -200,7 +200,7 @@ bool IMU::OnStartUp()
         m_save_calib = true;
       }
       bno055_set_axis_remap_value(BNO055_REMAP_X_Y);
-      bno055_set_remap_x_sign(BNO055_REMAP_AXIS_NEGATIVE);
+      //bno055_set_remap_x_sign(BNO055_REMAP_AXIS_NEGATIVE);
       bno055_get_axis_remap_value(&m_imu_axis);
       handled = true;
     }
