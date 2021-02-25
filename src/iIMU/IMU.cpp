@@ -250,6 +250,7 @@ bool IMU::buildReport()
   actab << "Gyro Calib Status" << m_gyroCalStatus;
   actab << "Mag Calib Status" << m_magCalStatus;
   actab << "Axis Setting" << m_imu_axis;
+  actab << "Heading Bias" << m_headingBias;
   actab << "Heading" << m_euler.h;
   m_msgs << actab.getFormattedString();
   
