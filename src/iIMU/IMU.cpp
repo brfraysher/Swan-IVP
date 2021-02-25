@@ -193,13 +193,14 @@ bool IMU::OnStartUp()
     bool handled = false;
     if (param == "CONFIG")
     {
-      for(int i=0; i<22; i++){
+      m_calib_test = value;
+      /*for(int i=0; i<22; i++){
         std::string v = biteStringX(value,' ');
         m_calib_test = std::stoi(v);
         
         //u8 val = u8(std::stoul(biteStringX(value,' ')));
         //m_systemCalibration[i] = val;
-      }
+      }*/
       handled = true;
     }
     
