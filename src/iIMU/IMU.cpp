@@ -187,6 +187,10 @@ bool IMU::OnStartUp()
     std::string value = line;
     
     bool handled = false;
+    if(param == "HEADING_BIAS") {
+      handled = true;
+      m_headingBias = std::stod(value);
+    }
     if (param == "CONFIG")
     {
       for(int i=0; i<22; i++){
@@ -334,6 +338,7 @@ void IMU::readEuler()
     m_open = false;
     return;
   }
+  m_euler.h += m_headingBias;
   
   Notify("IMU_EULER_P", m_euler.p);
   Notify("IMU_EULER_R", m_euler.r);

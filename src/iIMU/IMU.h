@@ -52,6 +52,7 @@ private: // Configuration variables
   bool m_open;
   bool m_savedCal;
   bool m_save_calib;
+  double m_headingBias;
   u8 m_status;
   u8 m_systemCalibration[22];
   u8 m_sysCalStatus;
