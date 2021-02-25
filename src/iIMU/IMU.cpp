@@ -389,7 +389,7 @@ bool IMU::checkPOST()
 void IMU::readSystemCalibration()
 {
   u8 oprMode = 0;
-  std::ofstream cFile ("example.txt");
+  std::ofstream cFile ("example.txt",std::ios::out | std::ios::binary);
   if(bno055_get_operation_mode(&oprMode))
   {
     reportEvent("Could not read operating mode");
@@ -409,7 +409,8 @@ void IMU::readSystemCalibration()
     if (cFile.is_open())
     {
       for(int count = 0; count < 22; count ++){
-          cFile << m_systemCalibration[count] << ", " ;
+          cFile.write((char *) &m_systemCalibration[count], sizeof(u8));
+          //cFile << m_systemCalibration[count] << ", " ;
       }
       cFile.close();
     }
