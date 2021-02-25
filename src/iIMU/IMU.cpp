@@ -199,6 +199,7 @@ bool IMU::OnStartUp()
       if (m_magCalStatus < 3){
         m_save_calib = true;
       }
+      bno055_get_axis_remap_value(&m_imu_axis);
       handled = true;
     }
     
@@ -241,7 +242,7 @@ bool IMU::buildReport()
   actab << "Accel Calib Status" << m_accelCalStatus;
   actab << "Gyro Calib Status" << m_gyroCalStatus;
   actab << "Mag Calib Status" << m_magCalStatus;
-  actab << "Test calib" << m_systemCalibration[4];
+  actab << "Axis Setting" << m_imu_axis;
   actab << "Heading" << m_euler.h;
   m_msgs << actab.getFormattedString();
   
@@ -306,9 +307,9 @@ void IMU::readCalibrationStatus()
     return;
   }
   
-  if (m_gyroCalStatus < 3 || m_magCalStatus < 3)
+  if (m_gyroCalStatus < 1 || m_magCalStatus < 1)
   {
-    reportEvent("IMU not calibrated - lost absolute orientation");
+    reportEvent("IMU not calibrated - lost heading");
   }
 
   if (BEST_CALIBRATION && m_save_calib){
