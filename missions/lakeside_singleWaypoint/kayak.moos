@@ -78,7 +78,7 @@ ProcessConfig = pLocalization
     AppTick = 40
     CommsTick = 40
 
-    Heading_bias = 4.5
+    Heading_bias = 0
 }
 
 ProcessConfig = uFldNodeBroker
