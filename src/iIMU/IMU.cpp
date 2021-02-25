@@ -21,7 +21,7 @@ extern "C"{
 }
 
 #define BEST_CALIBRATION  \
-(m_sysCalStatus==3) && (m_accelCalStatus==3) && (m_gyroCalStatus==3) && (m_magCalStatus==3)
+(m_sysCalStatus!=0) && (m_gyroCalStatus==3) && (m_magCalStatus==3)
 
 //---------------------------------------------------------
 // Constructor
