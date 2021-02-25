@@ -440,8 +440,11 @@ u8 IMU::writeSystemCalibration()
   {
     reportEvent("Could not write calibration data.");
     m_savedCal = false;
+
+    bno055_set_operation_mode(oprMode);
     return 1;
   }
+  bno055_set_operation_mode(oprMode);
   return 0;
 }
 
