@@ -8,8 +8,8 @@
 #include <iterator>
 #include <chrono>
 #include <thread>
-#include "MBUtils.h"
-#include "ACTable.h"
+#include <MBUtils.h>
+#include <ACTable.h>
 #include "MotorController.h"
 
 
@@ -70,11 +70,17 @@ bool MotorController::OnNewMail(MOOSMSG_LIST &NewMail)
     {
       m_thrust = msg.GetDouble();
     }
-    else if (key == "GPS1_QUALITY"){
-      m_gps_active = (msg.GetDouble() > 0);
+    else if (key == "GPS1_STATUS"){
+      m_gps_status = msg.GetString();
     }
-    else if (key == "IMU_SYS_CALIB_STATUS"){
-      m_imu_active = (msg.GetDouble() > 0);
+    else if (key == "GPS1_QUALITY"){
+      m_gps_quality = int(msg.GetDouble());
+    }
+    else if (key == "IMU_MAG_CALIB_STATUS"){
+      m_imu_mag_status = int(msg.GetDouble());
+    }
+    else if (key == "IMU_GYR_CALIB_STATUS"){
+      m_imu_gyro_status = int(msg.GetDouble());
     }
     else if (key != "APPCAST_REQ")
     { // handled by AppCastingMOOSApp
@@ -125,12 +131,14 @@ bool MotorController::Iterate()
     only imu - 1, 
     neither - 0
   */
-  uint8_t autonomy_status = (m_imu_active && m_gps_active) ? 3 : (m_gps_active ? 2 : (m_imu_active ? 1 : 0));
+  m_imu_active = m_imu_mag_status==3 && m_imu_gyro_status==3;
+  m_gps_active = m_gps_status == "A" && m_gps_quality != 0;
+  m_autonomy_status = (m_imu_active && m_gps_active) ? 3 : (m_gps_active ? 2 : (m_imu_active ? 1 : 0));
   
   uint8_t rudder = static_cast<uint8_t >(m_rudder);
   uint8_t thrust = static_cast<uint8_t >(m_thrust);
 
-  std::vector<uint8_t> data = {'K', rudder, thrust, autonomy_status, '\n'};
+  std::vector<uint8_t> data = {'K', rudder, thrust, m_autonomy_status, '\n'};
   
   const std::string arduinoPortWarning = "Arduino Port not open!!!";
   if (m_port.isOpen())
@@ -146,7 +154,7 @@ bool MotorController::Iterate()
       }
        if (m_port.read(sizeof(char)) == "C")
       {
-        compensation = m_port.readline();
+        m_compensation = m_port.readline();
       }
       serialTimeout++;
     }
@@ -234,7 +242,11 @@ void MotorController::registerVariables()
   Register("DESIRED_RUDDER");
   Register("DESIRED_THRUST");
   Register("GPS1_QUALITY");
-  Register("IMU_SYS_CALIB_STATUS");
+  Register("GPS1_STATUS");
+
+  Register("IMU_MAG_CALIB_STATUS");
+  Register("IMU_GYR_CALIB_STATUS");
+
 }
 
 
@@ -249,10 +261,18 @@ bool MotorController::buildReport()
   actab << "Desired Rudder" << m_rudder;
   actab << "Desired Thrust" << m_thrust;
   actab << "" << "";
+  actab << "IMU Gyro Status" << m_imu_gyro_status;
+  actab << "IMU Mag Status" << m_imu_mag_status;
+  actab << "" << "";
+  actab << "GPS Status" << m_gps_status;
+  actab << "GPS Quality" << m_gps_quality;
+  actab << "" << "";
+  actab << "Autonomy Status" << m_autonomy_status;
+  actab << "" << "";
   actab << "Left Motor Speed" << m_leftMotorSpeed;
   actab << "Right Motor Speed" << m_rightMotorSpeed;
   actab << "" << "";
-  actab << "Compensation" << compensation;
+  actab << "Compensation" << m_compensation;
   actab << "Arduino message" << m_arduinoMsg;
  
   

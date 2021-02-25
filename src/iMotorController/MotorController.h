@@ -9,7 +9,7 @@
 #define MotorController_HEADER
 
 #include <serial/serial.h>
-#include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
+#include <MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h>
 
 class MotorController : public AppCastingMOOSApp
 {
@@ -43,10 +43,15 @@ private: // State variables
   double m_leftMotorSpeed;
   double m_rightMotorSpeed;
   bool m_imu_active;
+  int m_imu_mag_status;
+  int m_imu_gyro_status;
+  int m_gps_quality;
   bool m_gps_active;
+  std::string m_gps_status;
+  uint8_t m_autonomy_status;
   
   std::string m_arduinoMsg;
-  std::string compensation;
+  std::string m_compensation;
 };
 
 #endif
