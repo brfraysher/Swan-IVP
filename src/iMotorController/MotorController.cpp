@@ -137,14 +137,20 @@ bool MotorController::Iterate()
   {
     retractRunWarning(arduinoPortWarning);
     m_port.write(data);
-    
-    while (m_port.available() > 3)
+    int serialTimeout = 0;
+    while (m_port.available() > 1 && serialTimeout < 10)
     {
-      if (m_port.read() == "K")
+      if (m_port.read(sizeof(char)) == "K")
       {
-        m_arduinoMsg += m_port.readline();
+        m_arduinoMsg = m_port.readline();
       }
+       if (m_port.read(sizeof(char)) == "C")
+      {
+        compensation = m_port.readline();
+      }
+      serialTimeout++;
     }
+    m_port.flushInput();
     
     Notify("ARDUINO_MSG", m_arduinoMsg);
   }
@@ -153,13 +159,7 @@ bool MotorController::Iterate()
     reportRunWarning(arduinoPortWarning);
     return false;
   }
-   if (m_port.available() > 2)
-   {
-      if (m_port.read() == "C")
-      {
-        compensation = m_port.readline();
-      }
-   }
+  
 
   
   AppCastingMOOSApp::PostReport();
@@ -252,10 +252,10 @@ bool MotorController::buildReport()
   actab << "Left Motor Speed" << m_leftMotorSpeed;
   actab << "Right Motor Speed" << m_rightMotorSpeed;
   actab << "" << "";
-  actab << "Arduino message" << m_arduinoMsg;
   actab << "Compensation" << compensation;
+  actab << "Arduino message" << m_arduinoMsg;
+ 
   
-  m_arduinoMsg.clear();
   
   m_msgs << actab.getFormattedString();
   
