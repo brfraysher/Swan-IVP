@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
+#include <fstream>
 
 extern "C"{
   #include "bno055.h"
@@ -80,11 +81,12 @@ void IMU::initIMU()
     writeSystemCalibration();
   }
   
-  if (bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF))
+  if (bno055_set_operation_mode(BNO055_OPERATION_MODE_COMPASS))
   {
     reportEvent("Failed to set IMU operation mode!");
     return;
   }
+
 
   if (!checkPOST())
   {
@@ -189,7 +191,7 @@ bool IMU::OnStartUp()
     std::string value = line;
     
     bool handled = false;
-    if (param == "FOO")
+    if (param == "CONFIG")
     {
       handled = true;
     }
@@ -301,7 +303,7 @@ void IMU::readCalibrationStatus()
     return;
   }
   
-  if (m_sysCalStatus == 0)
+  if (m_gyroCalStatus < 3 || m_magCalStatus < 3)
   {
     reportEvent("IMU not calibrated - lost absolute orientation");
   }
@@ -387,6 +389,7 @@ bool IMU::checkPOST()
 void IMU::readSystemCalibration()
 {
   u8 oprMode = 0;
+  std::ofstream cFile ("example.txt");
   if(bno055_get_operation_mode(&oprMode))
   {
     reportEvent("Could not read operating mode");
@@ -401,6 +404,15 @@ void IMU::readSystemCalibration()
   if(bno055_read_register(BNO055_ACCEL_OFFSET_X_LSB_REG,m_systemCalibration,22))
   {
     reportEvent("Could not read calibration data");
+  }
+  else{
+    if (cFile.is_open())
+    {
+      for(int count = 0; count < 22; count ++){
+          cFile << m_systemCalibration[count] << ", " ;
+      }
+      cFile.close();
+    }
   }
   if(oprMode != BNO055_OPERATION_MODE_CONFIG)
   {
