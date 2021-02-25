@@ -7,7 +7,7 @@ Servo right;
 
 #define ch1Pin 2
 #define ch2Pin 3
-
+#define ch4Pin 4
 #define LMPin 12
 #define RMPin 13
 
@@ -17,17 +17,24 @@ Servo right;
 
 #define ch1Min 1000
 #define ch2Min 1000
+#define ch4Min 1000
+
 
 #define ch1Mid 1500
 #define ch2Mid 1500
+#define ch4Mid 1500
+
 
 #define ch1Max 2000
 #define ch2Max 2000
+#define ch4Max 2000
+
 
 #define rcOverridePin 6 //Next available interrupt pin
 
 int leftSpeed = 90;
 int rightSpeed = 90;
+int lCompens = 0;
 bool Lforward;
 bool Rforward;
 
@@ -35,14 +42,15 @@ bool rcEnabled;
 
 int ch1; // Here's where we'll keep our channel values
 int ch2;
+int ch4;
 int ch6;
 
 long int timestamp = 0;
 
 //Channel up time
-uint32_t rc_start[2];
-uint16_t rc_values[2];
-uint16_t rc_store[2];
+uint32_t rc_start[3];
+uint16_t rc_values[3];
+uint16_t rc_store[3];
 
 int const1;
 int const2;
@@ -68,6 +76,7 @@ void setup()
   
   pinMode(ch1Pin, INPUT);
   pinMode(ch2Pin, INPUT);
+  pinMode(ch4Pin,INPUT);
   pinMode(rcOverridePin, INPUT);
   pinMode(LMPin, OUTPUT);
   pinMode(RMPin, OUTPUT);
@@ -76,6 +85,7 @@ void setup()
   pinMode(BluePin, OUTPUT);
   enableInterrupt(ch1Pin, calc_ch1, CHANGE);
   enableInterrupt(ch2Pin, calc_ch2, CHANGE);
+  
   Serial.begin(115200);
   delay(5000);
 }
@@ -89,25 +99,28 @@ void loop()
   {
     lightStatus = 1; //Blue = RC state
     ReadRCValues();
+    ReadTrim();
     ConfigureRCValues();
     CalculateSpeed(); //Calculate motor speeds from ch1 & 2
     WriteMotors(); //Write speeds to motors and determine forward/reverse
 
-//    Serial.print('K');
-//    Serial.print(rcEnabled);
-//    Serial.print(',');
-//    Serial.print(leftSpeed);
-//    Serial.print(',');
-//    Serial.print(rightSpeed);
-//    Serial.print('\n');
+    Serial.print('K');
+    Serial.print(rcEnabled);
+    Serial.print(',');
+    Serial.print(leftSpeed);
+    Serial.print(',');
+    Serial.print(rightSpeed);
+    Serial.print('\n');
+    Serial.print('C');
+    Serial.print(lCompens);
+    Serial.print('\n');
   }
   
   
   else
-  {
-    
+  { 
     while (Serial.available() > 4)
-    {
+    {      
       if (Serial.read() == 'K')
       {
         int8_t rudder = Serial.read();
@@ -117,6 +130,7 @@ void loop()
         
         if (delim == '\n')
         {
+      
           map(thrust, 0, 100, -255, 255);
           map(rudder, -180, 180, -255, 255);
           
@@ -125,8 +139,8 @@ void loop()
           CalculateSpeed();
           
           WriteMotors();
-
-//            Serial.print("KWrote data\n");
+  
+  //            Serial.print("KWrote data\n");
           
           timestamp = millis();
           switch (status)
@@ -134,11 +148,12 @@ void loop()
           case 3:
             lightStatus = 2; //Green - autonomy, all sensors active
             break;
-          case 2,1:
+          case 1 ... 2:
             lightStatus = 3; //Yellow - autonomy, 1 sensor fault
+            break;
           default:
             lightStatus = 4; //Red - Complete sensor failure
-            break;
+            break;   
           }
         }
       }
@@ -150,7 +165,7 @@ void loop()
     {
       left.write(90);
       right.write(90);
-      Serial.print("KNot recieving commands. Stopping.\n");
+      //Serial.print("KNot recieving commands. Stopping.\n");
       lightStatus = 4; // Red - Serial communication fault
     }
   }
@@ -160,11 +175,18 @@ void loop()
   Serial.print('K');
   Serial.print(rcEnabled);
   Serial.print(',');
+  Serial.print(lightStatus);
+  Serial.print(',');
   Serial.print(leftSpeed);
   Serial.print(',');
   Serial.print(rightSpeed);
   Serial.print('\n');
 }
+
+void ReadTrim(){
+  ch4 = pulseIn(4, HIGH);
+}
+
 
 void ConfigureRCValues()
 {
@@ -178,10 +200,11 @@ void ConfigureRCValues()
   {
     ch1 = constrain(rc_values[0], ch1Min, ch1Max);
     ch2 = constrain(rc_values[1], ch2Min, ch2Max);
+    ch4 = constrain(ch4,ch4Min,ch4Max);
   }
   const1 = map(ch1, ch1Min, ch1Max, -255, 255);
   const2 = map(ch2, ch2Min, ch2Max, -255, 255);
-  
+  lCompens = map(ch4, ch4Min, ch4Max, 0, 110);
   if (abs(const1) <= 20)
   { const1 = 0; }
   if (abs(const2) <= 20)
@@ -237,11 +260,22 @@ void rcOverride()
 
 void CalculateSpeed()
 {
-  rightSpeed = constrain((const2 - const1), -255, 255);
+  int rightMin = -255 + lCompens;
+  int rightMax = 255 - lCompens;
+  rightSpeed = constrain((const2 - const1), rightMin, rightMax);
   leftSpeed = constrain((const2 + const1), -255, 255);
-  
-  rightSpeed = map(rightSpeed, -255, 255, 0, 180);
-  leftSpeed = map(leftSpeed, -255, 255, 0, 180);
+  if(abs(leftSpeed) > 5){
+    if(leftSpeed > 0)
+      leftSpeed = min(255,leftSpeed+lCompens);
+    if(leftSpeed < 0)
+      leftSpeed = max(-255,leftSpeed-lCompens);
+  }
+  rightSpeed = map(rightSpeed, -255, 255, 17, 163);
+  leftSpeed = map(leftSpeed, -255, 255, 17, 163);
+  /*Serial.print("Left: ");
+  Serial.println(leftSpeed);
+  Serial.print("Right: ");
+  Serial.println(rightSpeed);*/
 }
 
 void WriteMotors()

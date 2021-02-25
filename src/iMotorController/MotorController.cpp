@@ -139,7 +139,7 @@ bool MotorController::Iterate()
   uint8_t thrust = static_cast<uint8_t >(m_thrust);
 
   std::vector<uint8_t> data = {'K', rudder, thrust, m_autonomy_status, '\n'};
-  
+  //std::string data = "K"+std::to_string(rudder)+","+std::to_string(thrust)+","+std::to_string(m_autonomy_status)+"\n";
   const std::string arduinoPortWarning = "Arduino Port not open!!!";
   if (m_port.isOpen())
   {
