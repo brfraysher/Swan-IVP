@@ -199,6 +199,8 @@ bool IMU::OnStartUp()
       if (m_magCalStatus < 3){
         m_save_calib = true;
       }
+      bno055_set_axis_remap_value(BNO055_REMAP_X_Y);
+      bno055_set_remap_y_sign(BNO055_REMAP_AXIS_NEGATIVE);
       bno055_get_axis_remap_value(&m_imu_axis);
       handled = true;
     }
