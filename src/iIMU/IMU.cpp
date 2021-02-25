@@ -194,8 +194,11 @@ bool IMU::OnStartUp()
     if (param == "CONFIG")
     {
       for(int i=0; i<22; i++){
-        u8 val = u8(std::stoul(biteStringX(value,' ')));
-        m_systemCalibration[i] = val;
+        std::string v = biteStringX(value,' ');
+        m_calib_test = std::stoi(v);
+        
+        //u8 val = u8(std::stoul(biteStringX(value,' ')));
+        //m_systemCalibration[i] = val;
       }
       handled = true;
     }
@@ -239,7 +242,7 @@ bool IMU::buildReport()
   actab << "Accel Calib Status" << m_accelCalStatus;
   actab << "Gyro Calib Status" << m_gyroCalStatus;
   actab << "Mag Calib Status" << m_magCalStatus;
-  actab << "Test calib" << m_systemCalibration[4];
+  actab << "Test calib" << m_calib_test;
   actab << "Heading" << m_euler.h;
   m_msgs << actab.getFormattedString();
   
