@@ -76,10 +76,6 @@ void IMU::initIMU()
     reportEvent("Failed to initialize IMU!");
     return;
   }
-
-  if(m_savedCal){
-    writeSystemCalibration();
-  }
   
   if (bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF))
   {
@@ -198,6 +194,11 @@ bool IMU::OnStartUp()
         m_systemCalibration[i] = u8(std::stoi(v));
         
       }
+      writeSystemCalibration();
+      readCalibrationStatus();
+      if (m_magCalStatus < 3){
+        m_save_calib = true;
+      }
       handled = true;
     }
     
@@ -310,10 +311,10 @@ void IMU::readCalibrationStatus()
     reportEvent("IMU not calibrated - lost absolute orientation");
   }
 
-  /*if (BEST_CALIBRATION && !m_savedCal){
+  if (BEST_CALIBRATION && m_save_calib){
     readSystemCalibration();
-    m_savedCal = true;
-  }*/
+    m_save_calib = false;
+  }
   
   Notify("IMU_SYS_CALIB_STATUS", m_sysCalStatus);
   Notify("IMU_ACC_CALIB_STATUS", m_accelCalStatus);
@@ -412,7 +413,6 @@ void IMU::readSystemCalibration()
     {
       for(int count = 0; count < 22; count ++){
           cFile.write((char *) &m_systemCalibration[count], sizeof(u8));
-          //cFile << m_systemCalibration[count] << ", " ;
       }
       cFile.close();
     }
