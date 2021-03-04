@@ -77,7 +77,7 @@ void IMU::initIMU()
     return;
   }
   
-  if (bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF))
+  if (bno055_set_operation_mode(BNO055_OPERATION_MODE_COMPASS))
   {
     reportEvent("Failed to set IMU operation mode!");
     return;
