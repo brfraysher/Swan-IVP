@@ -70,17 +70,11 @@ bool MotorController::OnNewMail(MOOSMSG_LIST &NewMail)
     {
       m_thrust = msg.GetDouble();
     }
-    else if (key == "GPS1_STATUS"){
-      m_gps_status = msg.GetString();
+    else if (key == "GPS_ACTIVE"){
+      m_gps_active = int(msg.GetDouble());
     }
-    else if (key == "GPS1_QUALITY"){
-      m_gps_quality = int(msg.GetDouble());
-    }
-    else if (key == "IMU_MAG_CALIB_STATUS"){
-      m_imu_mag_status = int(msg.GetDouble());
-    }
-    else if (key == "IMU_GYR_CALIB_STATUS"){
-      m_imu_gyro_status = int(msg.GetDouble());
+    else if (key == "IMU_ACTIVE"){
+      m_imu_active = int(msg.GetDouble());
     }
     else if (key != "APPCAST_REQ")
     { // handled by AppCastingMOOSApp
@@ -107,32 +101,12 @@ bool MotorController::OnConnectToServer()
 bool MotorController::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-
-//    double left_command;
-//    double right_command;
-//
-//    left_command = m_thrust + m_rudder + 90;
-//    right_command = m_thrust - m_rudder + 90;
-//
-//    left_command = std::min(160.0, std::max(20.0, left_command));
-//    right_command = std::min(160.0, std::max(20.0, right_command));
-//
-//    m_rightMotorSpeed = right_command;
-//    m_leftMotorSpeed = left_command;
-//
-//    uint8_t left = static_cast<uint8_t>(left_command);
-//    uint8_t right = static_cast<uint8_t>(right_command);
-//
-//    std::vector<uint8_t> data = {'K', left, right, '\n'};
-  
   /*autonomy states:
     imu & gps active - 3, 
     only gps - 2, 
     only imu - 1, 
     neither - 0
   */
-  m_imu_active = m_imu_mag_status==3 && m_imu_gyro_status==3;
-  m_gps_active = m_gps_status == "A" && m_gps_quality != 0;
   m_autonomy_status = (m_imu_active && m_gps_active) ? 3 : (m_gps_active ? 2 : (m_imu_active ? 1 : 0));
   
   uint8_t rudder = static_cast<uint8_t >(m_rudder);
@@ -241,12 +215,8 @@ void MotorController::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("DESIRED_RUDDER");
   Register("DESIRED_THRUST");
-  Register("GPS1_QUALITY");
-  Register("GPS1_STATUS");
-
-  Register("IMU_MAG_CALIB_STATUS");
-  Register("IMU_GYR_CALIB_STATUS");
-
+  Register("IMU_ACTIVE");
+  Register("GPS_ACTIVE");
 }
 
 
@@ -261,11 +231,8 @@ bool MotorController::buildReport()
   actab << "Desired Rudder" << m_rudder;
   actab << "Desired Thrust" << m_thrust;
   actab << "" << "";
-  actab << "IMU Gyro Status" << m_imu_gyro_status;
-  actab << "IMU Mag Status" << m_imu_mag_status;
-  actab << "" << "";
-  actab << "GPS Status" << m_gps_status;
-  actab << "GPS Quality" << m_gps_quality;
+  actab << "GPS Active" << m_gps_active;
+  actab << "IMU Active" << m_imu_active;
   actab << "" << "";
   actab << "Autonomy Status" << m_autonomy_status;
   actab << "" << "";

@@ -46,16 +46,31 @@ bool Localization::OnNewMail(MOOSMSG_LIST &NewMail)
     bool   mdbl  = msg.IsDouble();
     bool   mstr  = msg.IsString();
 #endif
-
-     if(key == "GPS1_LAT")
-       m_lat = msg.GetDouble();
-     else if (key == "GPS1_LON")
-       m_long = msg.GetDouble();
-     else if (key == "IMU_EULER_H")
-       m_heading = msg.GetDouble();
-     else if (key == "GPS1_SPEED")
-       m_speed = msg.GetDouble();
-
+    //GPS Data Messages
+    if(key == "GPS1_LAT")
+      m_lat = msg.GetDouble();
+    else if (key == "GPS1_LON")
+      m_long = msg.GetDouble();
+    else if (key == "GPS1_HEADING")
+      m_gps_heading = msg.GetDouble();
+    else if (key == "GPS1_SPEED")
+      m_speed = msg.GetDouble();
+    
+    //GPS Status Messages
+    else if (key == "GPS1_QUALITY")
+      m_gps_quality = msg.GetDouble();
+    else if (key == "GPS1_STATUS")
+      m_gps_status = msg.GetString();
+    
+    //IMU Data Messages
+    else if (key == "IMU_EULER_H")
+      m_imu_heading = msg.GetDouble(); 
+    
+    //IMU Status Messages
+    else if (key == "IMU_MAG_CALIB_STATUS")
+      m_imu_mag_status = msg.GetDouble();
+    else if (key == "IMU_GYR_CALIB_STATUS")
+      m_imu_gyro_status = msg.GetDouble();
 
      else if(key != "APPCAST_REQ") // handled by AppCastingMOOSApp
        reportRunWarning("Unhandled Mail: " + key);
@@ -87,27 +102,42 @@ bool Localization::Iterate()
   else
     retractRunWarning("GPS coordinate to local conversions not available");
   
-//  double north;
-//  double east;
 
   // Apply bias to heading
-  m_heading = (m_heading + m_headingBias);
-  if (m_heading > 360)
-  {
-    m_heading -= 360;
+  m_imu_status = m_imu_gyro_status + m_imu_mag_status;
+  m_imu_active = m_imu_mag_status!=0 && m_imu_gyro_status!=0 && m_imu_status > 2;
+  m_gps_active = m_gps_status == "A" && m_gps_quality != 0;
+  if(!m_imu_active && !m_gps_active){
+    reportEvent("All sensors reporting bad status");
+    Notify("MOOS_MANUAL_OVERIDE",true);
   }
-  else if (m_heading < 0)
-  {
-    m_heading += 360;
+  else{
+    if(!m_imu_active || (m_gps_active && m_speed > 0.5)){
+      m_heading = m_gps_heading + m_headingBias;
+    }
+    else{
+      m_heading = m_imu_heading + m_headingBias; 
+    }
+    if (m_heading > 360)
+    {
+      m_heading -= 360;
+    }
+    else if (m_heading < 0)
+    {
+      m_heading += 360;
+    }
+    m_geodesy.LatLong2LocalUTM(m_lat, m_long, m_north, m_east);
+    Notify("MOOS_MANUAL_OVERIDE",false);
+    Notify("NAV_Y", m_north);
+    Notify("NAV_X", m_east);
+
+    Notify("NAV_HEADING", m_heading);
+    Notify("NAV_SPEED", m_speed);
   }
+  Notify("IMU_ACTIVE",m_imu_active);
+  Notify("GPS_ACTIVE",m_gps_active);
 
-  m_geodesy.LatLong2LocalUTM(m_lat, m_long, m_north, m_east);
-  Notify("NAV_Y", m_north);
-  Notify("NAV_X", m_east);
-
-  Notify("NAV_HEADING", m_heading);
-  Notify("NAV_SPEED", m_speed);
-
+  
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -184,6 +214,11 @@ void Localization::registerVariables()
   Register("GPS1_LON", 0);
   Register("IMU_EULER_H", 0);
   Register("GPS1_SPEED", 0);
+  Register("GPS1_HEADING",0);
+  Register("GPS1_QUALITY",0);
+  Register("GPS1_STATUS",0);
+  Register("IMU_MAG_CALIB_STATUS",0);
+  Register("IMU_GYR_CALIB_STATUS",0);
 }
 
 
@@ -205,6 +240,11 @@ bool Localization::buildReport()
   actab << "East" << m_east;
   actab << "Speed" << m_speed;
   actab << "Heading" << m_heading;
+  actab << "" << "";
+  actab << "IMU Active" << m_imu_active;
+  actab << "IMU Heading" << m_imu_heading;
+  actab << "GPS Active" << m_gps_active;
+  actab << "GPS Heading" << m_gps_heading;
   m_msgs << actab.getFormattedString();
 
   return(true);
