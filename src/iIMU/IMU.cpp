@@ -153,6 +153,7 @@ bool IMU::Iterate()
   //checkStatus();
   
   readCalibrationStatus();
+  logMagnetometerOffset();
   readEuler();
   readQuaternion();
   sendStatus();
@@ -396,6 +397,39 @@ bool IMU::checkPOST()
   if (stMag == 0)
   {
     reportEvent("Magnetometer self test failed!");
+  }
+}
+
+void IMU::logMagnetometerOffset(){
+  u8 oprMode = 0;
+  std::ofstream cFile ("mag.dat",std::ios::out | std::ios::binary);
+  if(bno055_get_operation_mode(&oprMode))
+  {
+    reportEvent("Could not read operating mode");
+    m_open=false;
+    return;
+  }
+  if(oprMode != BNO055_OPERATION_MODE_CONFIG)
+  {
+    bno055_set_operation_mode(BNO055_OPERATION_MODE_CONFIG);
+  }
+  reportEvent("Saving calibration data");
+  if(bno055_read_register(BNO055_MAG_OFFSET_X_LSB_REG,m_magCalibration,6))
+  {
+    reportEvent("Could not read calibration data");
+  }
+  else{
+    if (cFile.is_open())
+    {
+      cFile.write((char *) m_magCalibration, 6*sizeof(u8));
+      
+      cFile.put('\n');
+      cFile.close();
+    }
+  }
+  if(oprMode != BNO055_OPERATION_MODE_CONFIG)
+  {
+    bno055_set_operation_mode(oprMode);
   }
 }
 

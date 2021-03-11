@@ -45,6 +45,7 @@ protected:
   void readEuler();
   void readQuaternion();
   void readSystemCalibration();
+  void logMagnetometerOffset();
   u8 writeSystemCalibration();
   void calibrateIMU(u32 max_timeout);
 
@@ -55,6 +56,7 @@ private: // Configuration variables
   double m_headingBias;
   u8 m_status;
   u8 m_systemCalibration[22];
+  u8 m_magCalibration[6];
   u8 m_sysCalStatus;
   u8 m_accelCalStatus;
   u8 m_gyroCalStatus;
