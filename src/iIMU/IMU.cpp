@@ -421,9 +421,7 @@ void IMU::logMagnetometerOffset(){
   else{
     if (cFile.is_open())
     {
-      cFile.write((char *) m_magCalibration, 6*sizeof(u8));
-      
-      cFile.put('\n');
+      cFile.write((char *) m_magCalibration, 6*sizeof(u8));      
       cFile.close();
     }
   }
