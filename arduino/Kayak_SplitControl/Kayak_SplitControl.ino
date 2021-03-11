@@ -87,7 +87,7 @@ void setup()
   enableInterrupt(ch2Pin, calc_ch2, CHANGE);
   
   Serial.begin(115200);
-  delay(5000);
+  delay(1000);
 }
 
 void loop()
@@ -165,7 +165,7 @@ void loop()
     {
       left.write(90);
       right.write(90);
-      //Serial.print("KNot recieving commands. Stopping.\n");
+      Serial.print("KNot recieving commands. Stopping.\n");
       lightStatus = 4; // Red - Serial communication fault
     }
   }
@@ -239,21 +239,20 @@ void calc_ch2()
 void rcOverride()
 {
   ch6 = pulseIn(rcOverridePin, HIGH);
-  if (ch6 > 1600)
+  if ((ch6 > 1600)&&(!rcEnabled))
   {
     rcEnabled = true;
     leftSpeed = 90;
     rightSpeed = 90;
-    WriteMotors();
+    //Write Motors will be called in the loop, just set speeds back to 0 and let it be written later
+    //WriteMotors();
+    
   }
-  else
+  else if(ch6 < 1600 && rcEnabled)
   {
-    if (rcEnabled)
-    {
-      leftSpeed = 90;
-      rightSpeed = 90;
-      WriteMotors();
-    }
+    leftSpeed = 90;
+    rightSpeed = 90;
+    //WriteMotors();
     rcEnabled = false;
   }
 }
@@ -282,7 +281,6 @@ void WriteMotors()
 {
   left.write(leftSpeed);
   right.write(rightSpeed);
-  
 }
 
 void UpdateLights()
