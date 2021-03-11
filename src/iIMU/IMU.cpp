@@ -402,7 +402,7 @@ bool IMU::checkPOST()
 
 void IMU::logMagnetometerOffset(){
   u8 oprMode = 0;
-  std::ofstream cFile ("mag.dat",std::ios::out | std::ios::binary);
+  std::ofstream cFile ("mag.dat",std::ios::app | std::ios::binary);
   if(bno055_get_operation_mode(&oprMode))
   {
     reportEvent("Could not read operating mode");
