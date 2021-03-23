@@ -1,7 +1,7 @@
 build/
 bin/
 lib/
-missions/alder/
+missions/alder/*
 *.alog
 *.blog
 *.xlog
