@@ -111,7 +111,7 @@ bool GPS::Iterate()
   Notify("GPS1_SPEED", m_gps->fix.speed);
   Notify("GPS1_HEADING", m_gps->fix.travelAngle);
   Notify("GPS1_QUALITY", m_gps->fix.quality);
-  Notify("GPS1_STATUS", m_gps->fix.status);
+  Notify("GPS1_STATUS", std::string(1,m_gps->fix.status));
   Notify("GPS1_ALT", m_gps->fix.altitude);
   Notify("GPS1_TRACKING_SATS", (double) m_gps->fix.trackingSatellites);
   Notify("GPS1_VISIBLE_SATS", (double) m_gps->fix.visibleSatellites);

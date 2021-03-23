@@ -13,38 +13,48 @@
 
 class Localization : public AppCastingMOOSApp
 {
- public:
-   Localization();
-   ~Localization();
+  public:
+    Localization();
+    ~Localization();
 
- protected: // Standard MOOSApp functions to overload
-   bool OnNewMail(MOOSMSG_LIST &NewMail);
-   bool Iterate();
-   bool OnConnectToServer();
-   bool OnStartUp();
+  protected: // Standard MOOSApp functions to overload
+    bool OnNewMail(MOOSMSG_LIST &NewMail);
+    bool Iterate();
+    bool OnConnectToServer();
+    bool OnStartUp();
 
- protected: // Standard AppCastingMOOSApp function to overload
-   bool buildReport();
+  protected: // Standard AppCastingMOOSApp function to overload
+    bool buildReport();
 
- protected:
-   void registerVariables();
+  protected:
+    void registerVariables();
 
- private: // Configuration variables
+  private: // Configuration variables
 
- private: // State variables
-   double m_lat;
-   double m_long;
-   double m_heading;
-   double m_speed;
-   
-   double m_north;
-   double m_east;
-   
-   double m_headingBias;
+  private: // State variables
+    double m_lat;
+    double m_long;
+    double m_gps_heading;
+    int m_gps_quality;
+    bool m_gps_active;
+    std::string m_gps_status;
 
-   bool m_geo_ok;
+    double m_imu_heading;
+    int m_imu_mag_status;
+    int m_imu_gyro_status;
+    int m_imu_status;
+    bool m_imu_active;
 
-   CMOOSGeodesy m_geodesy;
+    double m_speed;
+    double m_heading;
+    double m_north;
+    double m_east;
+    
+    double m_headingBias;
+
+    bool m_geo_ok;
+
+    CMOOSGeodesy m_geodesy;
 };
 
 #endif

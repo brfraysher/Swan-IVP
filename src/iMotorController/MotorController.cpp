@@ -8,8 +8,8 @@
 #include <iterator>
 #include <chrono>
 #include <thread>
-#include "MBUtils.h"
-#include "ACTable.h"
+#include <MBUtils.h>
+#include <ACTable.h>
 #include "MotorController.h"
 
 
@@ -70,11 +70,11 @@ bool MotorController::OnNewMail(MOOSMSG_LIST &NewMail)
     {
       m_thrust = msg.GetDouble();
     }
-    else if (key == "GPS1_QUALITY"){
-      m_gps_active = (msg.GetDouble() > 0);
+    else if (key == "GPS_ACTIVE"){
+      m_gps_active = int(msg.GetDouble());
     }
-    else if (key == "IMU_SYS_CALIB_STATUS"){
-      m_imu_active = (msg.GetDouble() > 0);
+    else if (key == "IMU_ACTIVE"){
+      m_imu_active = int(msg.GetDouble());
     }
     else if (key != "APPCAST_REQ")
     { // handled by AppCastingMOOSApp
@@ -101,37 +101,19 @@ bool MotorController::OnConnectToServer()
 bool MotorController::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-
-//    double left_command;
-//    double right_command;
-//
-//    left_command = m_thrust + m_rudder + 90;
-//    right_command = m_thrust - m_rudder + 90;
-//
-//    left_command = std::min(160.0, std::max(20.0, left_command));
-//    right_command = std::min(160.0, std::max(20.0, right_command));
-//
-//    m_rightMotorSpeed = right_command;
-//    m_leftMotorSpeed = left_command;
-//
-//    uint8_t left = static_cast<uint8_t>(left_command);
-//    uint8_t right = static_cast<uint8_t>(right_command);
-//
-//    std::vector<uint8_t> data = {'K', left, right, '\n'};
-  
   /*autonomy states:
     imu & gps active - 3, 
     only gps - 2, 
     only imu - 1, 
     neither - 0
   */
-  uint8_t autonomy_status = (m_imu_active && m_gps_active) ? 3 : (m_gps_active ? 2 : (m_imu_active ? 1 : 0));
+  m_autonomy_status = (m_imu_active && m_gps_active) ? 3 : (m_gps_active ? 2 : (m_imu_active ? 1 : 0));
   
   uint8_t rudder = static_cast<uint8_t >(m_rudder);
   uint8_t thrust = static_cast<uint8_t >(m_thrust);
 
-  std::vector<uint8_t> data = {'K', rudder, thrust, autonomy_status, '\n'};
-  
+  std::vector<uint8_t> data = {'K', rudder, thrust, m_autonomy_status, '\n'};
+  //std::string data = "K"+std::to_string(rudder)+","+std::to_string(thrust)+","+std::to_string(m_autonomy_status)+"\n";
   const std::string arduinoPortWarning = "Arduino Port not open!!!";
   if (m_port.isOpen())
   {
@@ -146,7 +128,7 @@ bool MotorController::Iterate()
       }
        if (m_port.read(sizeof(char)) == "C")
       {
-        compensation = m_port.readline();
+        m_compensation = m_port.readline();
       }
       serialTimeout++;
     }
@@ -233,8 +215,8 @@ void MotorController::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("DESIRED_RUDDER");
   Register("DESIRED_THRUST");
-  Register("GPS1_QUALITY");
-  Register("IMU_SYS_CALIB_STATUS");
+  Register("IMU_ACTIVE");
+  Register("GPS_ACTIVE");
 }
 
 
@@ -249,10 +231,15 @@ bool MotorController::buildReport()
   actab << "Desired Rudder" << m_rudder;
   actab << "Desired Thrust" << m_thrust;
   actab << "" << "";
+  actab << "GPS Active" << m_gps_active;
+  actab << "IMU Active" << m_imu_active;
+  actab << "" << "";
+  actab << "Autonomy Status" << m_autonomy_status;
+  actab << "" << "";
   actab << "Left Motor Speed" << m_leftMotorSpeed;
   actab << "Right Motor Speed" << m_rightMotorSpeed;
   actab << "" << "";
-  actab << "Compensation" << compensation;
+  actab << "Compensation" << m_compensation;
   actab << "Arduino message" << m_arduinoMsg;
  
   

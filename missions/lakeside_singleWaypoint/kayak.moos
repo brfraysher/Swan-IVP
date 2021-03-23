@@ -53,16 +53,18 @@ ProcessConfig = pShare
     CommsTick = 2
 
     input = route=localhost:10000
-    output = src_name=NODE_REPORT_LOCAL, dest_name=NODE_REPORT, route=192.168.1.125:10000
-    output = src_name=VIEW_POINT, route=192.168.1.125:10000
-    output = src_name=VIEW_SEGLIST, route=192.168.1.125:10000
-    output = src_name=APPCAST*, route=192.168.1.125:10000
+    output = src_name=NODE_REPORT_LOCAL, dest_name=NODE_REPORT, route=192.168.1.163:10000
+    output = src_name=VIEW_POINT, route=192.168.1.163:10000
+    output = src_name=VIEW_SEGLIST, route=192.168.1.163:10000
+    output = src_name=APPCAST*, route=192.168.1.163:10000
 }
 
 ProcessConfig = iIMU
 {
     AppTick = 10
     CommsTick = 10
+    Config = 5,0,3,0,223,255,252,255,163,255,41,254,254,255,254,255,0,0,232,3,207,1
+    Heading_bias = -15
 }
 
 ProcessConfig = iGPS
@@ -76,7 +78,7 @@ ProcessConfig = pLocalization
     AppTick = 40
     CommsTick = 40
 
-    Heading_bias = 4.5
+    Heading_bias = 0
 }
 
 ProcessConfig = uFldNodeBroker

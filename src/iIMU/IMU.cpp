@@ -14,13 +14,14 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
+#include <fstream>
 
 extern "C"{
   #include "bno055.h"
 }
 
 #define BEST_CALIBRATION  \
-(m_sysCalStatus==3) && (m_accelCalStatus==3) && (m_gyroCalStatus==3) && (m_magCalStatus==3)
+(m_sysCalStatus!=0) && (m_gyroCalStatus==3) && (m_magCalStatus==3)
 
 //---------------------------------------------------------
 // Constructor
@@ -75,16 +76,13 @@ void IMU::initIMU()
     reportEvent("Failed to initialize IMU!");
     return;
   }
-
-  if(m_savedCal){
-    writeSystemCalibration();
-  }
   
   if (bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF))
   {
     reportEvent("Failed to set IMU operation mode!");
     return;
   }
+
 
   if (!checkPOST())
   {
@@ -155,6 +153,7 @@ bool IMU::Iterate()
   //checkStatus();
   
   readCalibrationStatus();
+  logMagnetometerOffset();
   readEuler();
   readQuaternion();
   sendStatus();
@@ -189,12 +188,26 @@ bool IMU::OnStartUp()
     std::string value = line;
     
     bool handled = false;
-    if (param == "FOO")
-    {
+    if(param == "HEADING_BIAS") {
       handled = true;
+      m_headingBias = std::stod(value);
     }
-    else if (param == "BAR")
+    if (param == "CONFIG")
     {
+      for(int i=0; i<22; i++){
+        std::string v = biteStringX(value,',');
+        m_systemCalibration[i] = u8(std::stoi(v));
+        
+      }
+      writeSystemCalibration();
+      readCalibrationStatus();
+      if (m_magCalStatus < 3){
+        m_save_calib = true;
+      }
+      bno055_set_axis_remap_value(BNO055_DEFAULT_AXIS);
+      bno055_set_remap_x_sign(BNO055_REMAP_AXIS_POSITIVE);
+      bno055_set_remap_y_sign(BNO055_REMAP_AXIS_POSITIVE);
+      bno055_get_axis_remap_value(&m_imu_axis);
       handled = true;
     }
     
@@ -237,6 +250,8 @@ bool IMU::buildReport()
   actab << "Accel Calib Status" << m_accelCalStatus;
   actab << "Gyro Calib Status" << m_gyroCalStatus;
   actab << "Mag Calib Status" << m_magCalStatus;
+  actab << "Axis Setting" << m_imu_axis;
+  actab << "Heading Bias" << m_headingBias;
   actab << "Heading" << m_euler.h;
   m_msgs << actab.getFormattedString();
   
@@ -301,14 +316,14 @@ void IMU::readCalibrationStatus()
     return;
   }
   
-  if (m_sysCalStatus == 0)
+  if (m_gyroCalStatus < 1 || m_magCalStatus < 1)
   {
-    reportEvent("IMU not calibrated - lost absolute orientation");
+    reportEvent("IMU not calibrated - lost heading");
   }
 
-  if (BEST_CALIBRATION && !m_savedCal){
+  if (BEST_CALIBRATION && m_save_calib){
     readSystemCalibration();
-    m_savedCal = true;
+    m_save_calib = false;
   }
   
   Notify("IMU_SYS_CALIB_STATUS", m_sysCalStatus);
@@ -325,6 +340,7 @@ void IMU::readEuler()
     m_open = false;
     return;
   }
+  m_euler.h += m_headingBias;
   
   Notify("IMU_EULER_P", m_euler.p);
   Notify("IMU_EULER_R", m_euler.r);
@@ -384,9 +400,41 @@ bool IMU::checkPOST()
   }
 }
 
+void IMU::logMagnetometerOffset(){
+  u8 oprMode = 0;
+  std::ofstream cFile ("mag.dat",std::ios::app | std::ios::binary);
+  if(bno055_get_operation_mode(&oprMode))
+  {
+    reportEvent("Could not read operating mode");
+    m_open=false;
+    return;
+  }
+  if(oprMode != BNO055_OPERATION_MODE_CONFIG)
+  {
+    bno055_set_operation_mode(BNO055_OPERATION_MODE_CONFIG);
+  }
+  reportEvent("Saving calibration data");
+  if(bno055_read_register(BNO055_MAG_OFFSET_X_LSB_REG,m_magCalibration,6))
+  {
+    reportEvent("Could not read calibration data");
+  }
+  else{
+    if (cFile.is_open())
+    {
+      cFile.write((char *) m_magCalibration, 6*sizeof(u8));      
+      cFile.close();
+    }
+  }
+  if(oprMode != BNO055_OPERATION_MODE_CONFIG)
+  {
+    bno055_set_operation_mode(oprMode);
+  }
+}
+
 void IMU::readSystemCalibration()
 {
   u8 oprMode = 0;
+  std::ofstream cFile ("example.dat",std::ios::out | std::ios::binary);
   if(bno055_get_operation_mode(&oprMode))
   {
     reportEvent("Could not read operating mode");
@@ -401,6 +449,15 @@ void IMU::readSystemCalibration()
   if(bno055_read_register(BNO055_ACCEL_OFFSET_X_LSB_REG,m_systemCalibration,22))
   {
     reportEvent("Could not read calibration data");
+  }
+  else{
+    if (cFile.is_open())
+    {
+      for(int count = 0; count < 22; count ++){
+          cFile.write((char *) &m_systemCalibration[count], sizeof(u8));
+      }
+      cFile.close();
+    }
   }
   if(oprMode != BNO055_OPERATION_MODE_CONFIG)
   {
@@ -425,8 +482,11 @@ u8 IMU::writeSystemCalibration()
   {
     reportEvent("Could not write calibration data.");
     m_savedCal = false;
+
+    bno055_set_operation_mode(oprMode);
     return 1;
   }
+  bno055_set_operation_mode(oprMode);
   return 0;
 }
 
