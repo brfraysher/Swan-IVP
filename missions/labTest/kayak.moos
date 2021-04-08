@@ -9,9 +9,12 @@ Community    = kayak
 MOOSTimeWarp = 1
 
 // Palmer Lake
-LatOrigin  = 33.218004
-LongOrigin = -87.547964
+//LatOrigin  = 33.218004
+//LongOrigin = -87.547964
 
+//Song Lab
+LatOrigin = 33.21385
+LongOrigin = -87.543661
 
 // Forest Lake
 //LatOrigin  = 43.825300

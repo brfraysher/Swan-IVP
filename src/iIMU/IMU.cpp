@@ -192,6 +192,10 @@ bool IMU::OnStartUp()
       handled = true;
       m_headingBias = std::stod(value);
     }
+    if(param == "LOG_MAG_CALIB"){
+      handled = true;
+      m_log_mag = std::stoi(value) == 1;
+    }
     if (param == "CONFIG")
     {
       for(int i=0; i<22; i++){

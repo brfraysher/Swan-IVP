@@ -54,6 +54,7 @@ private: // Configuration variables
   bool m_savedCal;
   bool m_save_calib;
   double m_headingBias;
+  bool m_log_mag;
   u8 m_status;
   u8 m_systemCalibration[22];
   u8 m_magCalibration[6];
