@@ -153,7 +153,7 @@ bool IMU::Iterate()
   //checkStatus();
   
   readCalibrationStatus();
-  logMagnetometerOffset();
+  //logMagnetometerOffset();
   readEuler();
   readQuaternion();
   sendStatus();
