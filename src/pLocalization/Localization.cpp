@@ -219,6 +219,7 @@ void Localization::registerVariables()
   Register("GPS1_HEADING",0);
   Register("GPS1_QUALITY",0);
   Register("GPS1_STATUS",0);
+  Register("GPS1_LOCKED",0);
   Register("IMU_MAG_CALIB_STATUS",0);
   Register("IMU_GYR_CALIB_STATUS",0);
 }
@@ -242,6 +243,7 @@ bool Localization::buildReport()
   actab << "East" << m_east;
   actab << "Speed" << m_speed;
   actab << "Heading" << m_heading;
+  actab << "GPS Locked" << m_gps_locked;
   actab << "" << "";
   actab << "IMU Active" << m_imu_active;
   actab << "IMU Heading" << m_imu_heading;
