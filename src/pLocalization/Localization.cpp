@@ -61,6 +61,8 @@ bool Localization::OnNewMail(MOOSMSG_LIST &NewMail)
       m_gps_quality = msg.GetDouble();
     else if (key == "GPS1_STATUS")
       m_gps_status = msg.GetString();
+    else if (key == "GPS1_LOCKED")
+      m_gps_locked = msg.GetDouble() == 1.0;
     
     //IMU Data Messages
     else if (key == "IMU_EULER_H")
@@ -106,7 +108,7 @@ bool Localization::Iterate()
   // Apply bias to heading
   m_imu_status = m_imu_gyro_status + m_imu_mag_status;
   m_imu_active = m_imu_mag_status!=0 && m_imu_gyro_status!=0 && m_imu_status > 2;
-  m_gps_active = m_gps_status == "A" && m_gps_quality != 0;
+  m_gps_active = m_gps_status == "A" && m_gps_locked;
   if(!m_imu_active && !m_gps_active){
     reportEvent("All sensors reporting bad status");
     Notify("MOOS_MANUAL_OVERIDE",true);
