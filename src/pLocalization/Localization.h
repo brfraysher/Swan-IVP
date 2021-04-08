@@ -38,6 +38,7 @@ class Localization : public AppCastingMOOSApp
     int m_gps_quality;
     bool m_gps_active;
     std::string m_gps_status;
+    bool m_gps_locked;
 
     double m_imu_heading;
     int m_imu_mag_status;
